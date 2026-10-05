@@ -1,0 +1,1140 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+
+<title>LYMAR Study Planner</title>
+
+<style>
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+
+    margin: 0;
+
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+
+    background:
+        linear-gradient(
+            135deg,
+            #050816,
+            #0b1024,
+            #111936
+        );
+
+    color: #ffffff;
+
+    min-height: 100vh;
+
+}
+
+
+.container {
+
+    width: 92%;
+
+    max-width: 1100px;
+
+    margin: auto;
+
+    padding: 35px 0 60px;
+
+}
+
+
+.header {
+
+    text-align: center;
+
+    margin-bottom: 30px;
+
+}
+
+
+.logo {
+
+    font-size: 42px;
+
+    font-weight: 900;
+
+    letter-spacing: 3px;
+
+}
+
+
+.subtitle {
+
+    color: #8fb3ff;
+
+    margin-top: 8px;
+
+    font-size: 16px;
+
+}
+
+
+.school {
+
+    margin-top: 8px;
+
+    color: #b8c4e6;
+
+    font-size: 14px;
+
+}
+
+
+.card {
+
+    background:
+        rgba(18, 27, 55, 0.92);
+
+    border:
+        1px solid rgba(120, 150, 255, 0.22);
+
+    border-radius: 20px;
+
+    padding: 25px;
+
+    margin-bottom: 25px;
+
+    box-shadow:
+        0 12px 35px
+        rgba(0, 0, 0, 0.35);
+
+}
+
+
+.card h2 {
+
+    margin-top: 0;
+
+    font-size: 23px;
+
+}
+
+
+.description {
+
+    color: #aeb9d8;
+
+    line-height: 1.6;
+
+}
+
+
+.form-grid {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, 1fr);
+
+    gap: 18px;
+
+    margin-top: 22px;
+
+}
+
+
+.field {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 8px;
+
+}
+
+
+.field.full {
+
+    grid-column:
+        1 / -1;
+
+}
+
+
+label {
+
+    font-weight: bold;
+
+    color: #dce5ff;
+
+}
+
+
+input,
+select {
+
+    width: 100%;
+
+    padding: 13px 15px;
+
+    border-radius: 11px;
+
+    border:
+        1px solid #354574;
+
+    background: #0a1128;
+
+    color: #ffffff;
+
+    font-size: 15px;
+
+    outline: none;
+
+}
+
+
+input:focus,
+select:focus {
+
+    border-color: #6d8cff;
+
+    box-shadow:
+        0 0 0 3px
+        rgba(109, 140, 255, 0.15);
+
+}
+
+
+select option {
+
+    background: #0a1128;
+
+    color: #ffffff;
+
+}
+
+
+.add-button {
+
+    margin-top: 22px;
+
+    width: 100%;
+
+    border: none;
+
+    border-radius: 12px;
+
+    padding: 15px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #536dfe,
+            #7c4dff
+        );
+
+    color: #ffffff;
+
+    font-weight: 800;
+
+    font-size: 15px;
+
+    cursor: pointer;
+
+}
+
+
+.add-button:hover {
+
+    transform: translateY(-1px);
+
+    box-shadow:
+        0 8px 25px
+        rgba(83, 109, 254, 0.3);
+
+}
+
+
+.progress-box {
+
+    margin-top: 15px;
+
+}
+
+
+.progress-text {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    color: #d8e1ff;
+
+    margin-bottom: 10px;
+
+}
+
+
+.progress-bar {
+
+    height: 16px;
+
+    border-radius: 20px;
+
+    background: #080e21;
+
+    overflow: hidden;
+
+}
+
+
+.progress-fill {
+
+    height: 100%;
+
+    width: 0%;
+
+    border-radius: 20px;
+
+    background:
+        linear-gradient(
+            90deg,
+            #536dfe,
+            #00e5ff
+        );
+
+    transition:
+        width 0.3s ease;
+
+}
+
+
+.tasks {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 14px;
+
+}
+
+
+.empty {
+
+    text-align: center;
+
+    padding: 30px;
+
+    color: #8996ba;
+
+}
+
+
+.task {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    gap: 20px;
+
+    padding: 18px;
+
+    border-radius: 15px;
+
+    background: #0b132d;
+
+    border:
+        1px solid #26365f;
+
+}
+
+
+.task.completed {
+
+    opacity: 0.65;
+
+}
+
+
+.task.completed .task-title {
+
+    text-decoration:
+        line-through;
+
+}
+
+
+.task-info {
+
+    flex: 1;
+
+}
+
+
+.task-title {
+
+    font-size: 17px;
+
+    font-weight: 800;
+
+    margin-bottom: 10px;
+
+}
+
+
+.task-meta {
+
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: 7px;
+
+}
+
+
+.badge {
+
+    display: inline-block;
+
+    padding: 6px 9px;
+
+    border-radius: 8px;
+
+    background: #17244a;
+
+    color: #c8d5ff;
+
+    font-size: 12px;
+
+}
+
+
+.task-actions {
+
+    display: flex;
+
+    gap: 8px;
+
+    flex-wrap: wrap;
+
+}
+
+
+.action-button {
+
+    border: none;
+
+    border-radius: 9px;
+
+    padding: 9px 12px;
+
+    color: #ffffff;
+
+    cursor: pointer;
+
+    font-weight: 700;
+
+}
+
+
+.complete-button {
+
+    background: #176b5c;
+
+}
+
+
+.delete-button {
+
+    background: #8f3041;
+
+}
+
+
+.back-button {
+
+    display: inline-block;
+
+    padding: 13px 22px;
+
+    border-radius: 12px;
+
+    background: #17244a;
+
+    color: #ffffff;
+
+    text-decoration: none;
+
+    font-weight: 800;
+
+}
+
+
+.back-button:hover {
+
+    background: #24386f;
+
+}
+
+
+@media (max-width: 750px) {
+
+    .form-grid {
+
+        grid-template-columns: 1fr;
+
+    }
+
+    .field.full {
+
+        grid-column: auto;
+
+    }
+
+    .task {
+
+        flex-direction: column;
+
+        align-items: stretch;
+
+    }
+
+    .task-actions {
+
+        width: 100%;
+
+    }
+
+    .action-button {
+
+        flex: 1;
+
+    }
+
+    .logo {
+
+        font-size: 34px;
+
+    }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+<div class="container">
+
+
+    <!-- HEADER -->
+
+    <div class="header">
+
+        <div class="logo">
+            LYMAR
+        </div>
+
+        <div class="subtitle">
+            📅 STUDY PLANNER
+        </div>
+
+        <div class="school">
+            LYCEE SAINT MARCEL DE RUKARA
+        </div>
+
+    </div>
+
+
+    <!-- ADD STUDY TASK -->
+
+    <div class="card">
+
+        <h2>📝 Create Study Task</h2>
+
+        <p class="description">
+            Organize your study time by creating tasks for the subjects
+            you need to practice.
+        </p>
+
+
+        <div class="form-grid">
+
+
+            <!-- SUBJECT -->
+
+            <div class="field">
+
+                <label for="subject">
+                    Subject
+                </label>
+
+                <select id="subject">
+
+                    <option>Mathematics</option>
+
+                    <option>Physics</option>
+
+                    <option>Chemistry</option>
+
+                    <option>Biology</option>
+
+                    <option>ICT & Programming</option>
+
+                    <option>English</option>
+
+                    <option>French</option>
+
+                    <option>History & Geography</option>
+
+                    <option>Entrepreneurship</option>
+
+                    <!-- NEW SUBJECTS -->
+
+                    <option>Psychology</option>
+
+                    <option>Literature</option>
+
+                    <option>Geography</option>
+
+                    <option>Kiswahili</option>
+
+                    <option>Music, Dance & Drama</option>
+
+                    <option>Physical Sports & Education</option>
+
+                </select>
+
+            </div>
+
+
+            <!-- DURATION -->
+
+            <div class="field">
+
+                <label for="duration">
+                    Study Duration
+                </label>
+
+                <select id="duration">
+
+                    <option value="15 minutes">
+                        15 minutes
+                    </option>
+
+                    <option value="30 minutes" selected>
+                        30 minutes
+                    </option>
+
+                    <option value="45 minutes">
+                        45 minutes
+                    </option>
+
+                    <option value="1 hour">
+                        1 hour
+                    </option>
+
+                    <option value="1.5 hours">
+                        1.5 hours
+                    </option>
+
+                    <option value="2 hours">
+                        2 hours
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <!-- TASK -->
+
+            <div class="field full">
+
+                <label for="task">
+                    What do you need to study?
+                </label>
+
+                <input
+                    type="text"
+                    id="task"
+                    placeholder="Example: Revise quadratic equations"
+                >
+
+            </div>
+
+
+            <!-- DATE -->
+
+            <div class="field">
+
+                <label for="date">
+                    Study Date
+                </label>
+
+                <input
+                    type="date"
+                    id="date"
+                >
+
+            </div>
+
+
+            <!-- PRIORITY -->
+
+            <div class="field">
+
+                <label for="priority">
+                    Priority
+                </label>
+
+                <select id="priority">
+
+                    <option>Normal</option>
+
+                    <option>Important</option>
+
+                    <option>Very Important</option>
+
+                </select>
+
+            </div>
+
+        </div>
+
+
+        <button
+            class="add-button"
+            onclick="addTask()"
+        >
+            ➕ ADD STUDY TASK
+        </button>
+
+    </div>
+
+
+    <!-- PROGRESS -->
+
+    <div class="card">
+
+        <h2>📊 Study Progress</h2>
+
+        <div class="progress-box">
+
+            <div class="progress-text">
+
+                <span id="progressText">
+                    0 of 0 tasks completed
+                </span>
+
+                <span id="progressPercent">
+                    0%
+                </span>
+
+            </div>
+
+
+            <div class="progress-bar">
+
+                <div
+                    class="progress-fill"
+                    id="progressFill"
+                ></div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- TASK LIST -->
+
+    <div class="card">
+
+        <h2>📋 My Study Tasks</h2>
+
+        <div
+            class="tasks"
+            id="tasks"
+        >
+
+            <div class="empty" id="emptyMessage">
+
+                No study tasks yet.
+
+                <br><br>
+
+                Create your first study task above.
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- BACK -->
+
+    <div style="text-align:center;">
+
+        <a
+            href="/"
+            class="back-button"
+        >
+            ← RETURN TO LYMAR
+        </a>
+
+    </div>
+
+</div>
+
+
+<script>
+
+let tasks = JSON.parse(
+    localStorage.getItem("lymarStudyTasks") || "[]"
+);
+
+
+function saveTasks() {
+
+    localStorage.setItem(
+        "lymarStudyTasks",
+        JSON.stringify(tasks)
+    );
+
+}
+
+
+function addTask() {
+
+    const subject =
+        document.getElementById("subject").value;
+
+    const duration =
+        document.getElementById("duration").value;
+
+    const taskText =
+        document.getElementById("task").value.trim();
+
+    const date =
+        document.getElementById("date").value;
+
+    const priority =
+        document.getElementById("priority").value;
+
+
+    if (!taskText) {
+
+        alert(
+            "Please enter what you need to study."
+        );
+
+        return;
+
+    }
+
+
+    if (!date) {
+
+        alert(
+            "Please choose a study date."
+        );
+
+        return;
+
+    }
+
+
+    const newTask = {
+
+        id: Date.now(),
+
+        subject: subject,
+
+        duration: duration,
+
+        task: taskText,
+
+        date: date,
+
+        priority: priority,
+
+        completed: false
+
+    };
+
+
+    tasks.push(newTask);
+
+    saveTasks();
+
+    document.getElementById("task").value = "";
+
+    renderTasks();
+
+}
+
+
+function completeTask(id) {
+
+    tasks = tasks.map(task => {
+
+        if (task.id === id) {
+
+            task.completed =
+                !task.completed;
+
+        }
+
+        return task;
+
+    });
+
+    saveTasks();
+
+    renderTasks();
+
+}
+
+
+function deleteTask(id) {
+
+    if (
+        !confirm(
+            "Delete this study task?"
+        )
+    ) {
+
+        return;
+
+    }
+
+
+    tasks = tasks.filter(
+        task => task.id !== id
+    );
+
+    saveTasks();
+
+    renderTasks();
+
+}
+
+
+function formatDate(dateString) {
+
+    const date =
+        new Date(dateString + "T00:00:00");
+
+    return date.toLocaleDateString(
+        undefined,
+        {
+            weekday: "short",
+            year: "numeric",
+            month: "short",
+            day: "numeric"
+        }
+    );
+
+}
+
+
+function renderTasks() {
+
+    const container =
+        document.getElementById("tasks");
+
+
+    if (tasks.length === 0) {
+
+        container.innerHTML = "";
+
+        const empty =
+            document.createElement("div");
+
+        empty.className = "empty";
+
+        empty.innerHTML =
+            "No study tasks yet.<br><br>" +
+            "Create your first study task above.";
+
+        container.appendChild(empty);
+
+        updateProgress();
+
+        return;
+
+    }
+
+
+    container.innerHTML = "";
+
+
+    tasks
+        .sort(
+            (a, b) =>
+                a.date.localeCompare(b.date)
+        )
+        .forEach(task => {
+
+            const taskElement =
+                document.createElement("div");
+
+            taskElement.className =
+                "task" +
+                (
+                    task.completed
+                        ? " completed"
+                        : ""
+                );
+
+
+            taskElement.innerHTML = `
+
+                <div class="task-info">
+
+                    <div class="task-title">
+                        ${escapeHtml(task.task)}
+                    </div>
+
+                    <div class="task-meta">
+
+                        <span class="badge">
+                            📚 ${escapeHtml(task.subject)}
+                        </span>
+
+                        <span class="badge">
+                            ⏱️ ${escapeHtml(task.duration)}
+                        </span>
+
+                        <span class="badge">
+                            📅 ${escapeHtml(formatDate(task.date))}
+                        </span>
+
+                        <span class="badge">
+                            ⭐ ${escapeHtml(task.priority)}
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="task-actions">
+
+                    <button
+                        class="action-button complete-button"
+                        onclick="completeTask(${task.id})"
+                    >
+                        ${
+                            task.completed
+                                ? "↩️ UNDO"
+                                : "✅ DONE"
+                        }
+                    </button>
+
+
+                    <button
+                        class="action-button delete-button"
+                        onclick="deleteTask(${task.id})"
+                    >
+                        🗑️ DELETE
+                    </button>
+
+                </div>
+
+            `;
+
+
+            container.appendChild(
+                taskElement
+            );
+
+        });
+
+
+    updateProgress();
+
+}
+
+
+function updateProgress() {
+
+    const total =
+        tasks.length;
+
+    const completed =
+        tasks.filter(
+            task => task.completed
+        ).length;
+
+
+    const percentage =
+        total === 0
+            ? 0
+            : Math.round(
+                (completed / total) * 100
+            );
+
+
+    document.getElementById(
+        "progressText"
+    ).textContent =
+        `${completed} of ${total} tasks completed`;
+
+
+    document.getElementById(
+        "progressPercent"
+    ).textContent =
+        `${percentage}%`;
+
+
+    document.getElementById(
+        "progressFill"
+    ).style.width =
+        `${percentage}%`;
+
+}
+
+
+function escapeHtml(value) {
+
+    return String(value)
+
+        .replaceAll("&", "&amp;")
+
+        .replaceAll("<", "&lt;")
+
+        .replaceAll(">", "&gt;")
+
+        .replaceAll('"', "&quot;")
+
+        .replaceAll("'", "&#039;");
+
+}
+
+
+renderTasks();
+
+</script>
+
+</body>
+
+</html>
+```

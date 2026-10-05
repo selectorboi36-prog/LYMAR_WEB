@@ -1,0 +1,2902 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>LYMAR Study & Quiz Mode</title>
+
+<style>
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background: #07111f;
+    color: #ffffff;
+    min-height: 100vh;
+}
+
+.container {
+    width: 92%;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 35px 0 60px;
+}
+
+.header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.logo {
+    font-size: 48px;
+    font-weight: 900;
+    letter-spacing: 5px;
+    color: #00e5ff;
+}
+
+.subtitle {
+    color: #9fb3c8;
+    font-size: 16px;
+    margin-top: 8px;
+}
+
+.card {
+    background: #0d1b2a;
+    border: 1px solid #1e3a52;
+    border-radius: 18px;
+    padding: 28px;
+    margin-bottom: 22px;
+    box-shadow: 0 10px 35px rgba(0,0,0,0.25);
+}
+
+h1,
+h2,
+h3 {
+    margin-top: 0;
+}
+
+h2 {
+    color: #00e5ff;
+}
+
+.controls {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.control-group label {
+    display: block;
+    margin-bottom: 9px;
+    color: #b9c9d8;
+    font-weight: bold;
+}
+
+select {
+    width: 100%;
+    padding: 14px;
+    border-radius: 10px;
+    border: 1px solid #31506b;
+    background: #081522;
+    color: white;
+    font-size: 16px;
+}
+
+button {
+    border: none;
+    border-radius: 10px;
+    padding: 14px 20px;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+button:hover {
+    transform: translateY(-1px);
+}
+
+.primary {
+    background: #00e5ff;
+    color: #031018;
+}
+
+.secondary {
+    background: #183247;
+    color: white;
+    border: 1px solid #31506b;
+}
+
+.start-area {
+    margin-top: 25px;
+    text-align: center;
+}
+
+#quizArea {
+    display: none;
+}
+
+.quiz-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.progress {
+    color: #8fa9bd;
+}
+
+.score {
+    color: #00e5ff;
+    font-weight: bold;
+}
+
+.question-number {
+    color: #8fa9bd;
+    margin-bottom: 10px;
+}
+
+.question {
+    font-size: 24px;
+    line-height: 1.45;
+    margin-bottom: 25px;
+}
+
+.options {
+    display: grid;
+    gap: 13px;
+}
+
+.option {
+    width: 100%;
+    text-align: left;
+    background: #102437;
+    color: white;
+    border: 1px solid #31506b;
+    padding: 17px;
+    border-radius: 12px;
+}
+
+.option:hover:not(:disabled) {
+    background: #17344c;
+    border-color: #00e5ff;
+}
+
+.option.correct {
+    background: #123b2d;
+    border-color: #35d08b;
+}
+
+.option.wrong {
+    background: #452029;
+    border-color: #ff5c70;
+}
+
+.option:disabled {
+    cursor: default;
+    transform: none;
+}
+
+.explanation {
+    display: none;
+    margin-top: 22px;
+    padding: 18px;
+    border-radius: 12px;
+    background: #101f2d;
+    border-left: 4px solid #00e5ff;
+    line-height: 1.6;
+}
+
+.next-area {
+    margin-top: 22px;
+    text-align: right;
+}
+
+#resultArea {
+    display: none;
+    text-align: center;
+}
+
+.final-score {
+    font-size: 52px;
+    color: #00e5ff;
+    font-weight: 900;
+    margin: 20px 0;
+}
+
+.result-message {
+    font-size: 20px;
+    margin-bottom: 25px;
+    color: #c9d7e4;
+}
+
+.home-link {
+    display: inline-block;
+    margin-top: 18px;
+    color: #00e5ff;
+    text-decoration: none;
+}
+
+.home-link:hover {
+    text-decoration: underline;
+}
+
+.small-note {
+    color: #8197aa;
+    font-size: 13px;
+    margin-top: 12px;
+}
+
+@media (max-width: 700px) {
+
+    .controls {
+        grid-template-columns: 1fr;
+    }
+
+    .logo {
+        font-size: 38px;
+    }
+
+    .question {
+        font-size: 20px;
+    }
+
+    .card {
+        padding: 20px;
+    }
+
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="header">
+
+        <div class="logo">LYMAR</div>
+
+        <div class="subtitle">
+            STUDY & QUIZ MODE
+        </div>
+
+        <div class="subtitle">
+            LYCEE SAINT MARCEL DE RUKARA
+        </div>
+
+    </div>
+
+
+    <!-- QUIZ SETUP -->
+
+    <div class="card" id="setupArea">
+
+        <h2>📚 Study & Quiz Mode</h2>
+
+        <p>
+            Choose a subject and difficulty, then test your knowledge
+            with multiple-choice questions.
+        </p>
+
+        <div class="controls">
+
+            <div class="control-group">
+
+                <label for="subject">
+                    Subject
+                </label>
+
+                <select id="subject">
+
+                    <option value="Mathematics">
+                        Mathematics
+                    </option>
+
+                    <option value="Physics">
+                        Physics
+                    </option>
+
+                    <option value="Chemistry">
+                        Chemistry
+                    </option>
+
+                    <option value="Biology">
+                        Biology
+                    </option>
+
+                    <option value="ICT & Programming">
+                        ICT & Programming
+                    </option>
+
+                    <option value="English">
+                        English
+                    </option>
+
+                    <option value="French">
+                        French
+                    </option>
+
+                    <option value="History & Geography">
+                        History & Geography
+                    </option>
+
+                    <option value="Entrepreneurship">
+                        Entrepreneurship
+                    </option>
+                    <option value="Psychology">
+                        Psychology
+                    </option>
+                    <option value="Literature">
+                        Literature
+                    </option>
+                    <option value="Geography">
+                        Geography
+                    </option>
+                    <option value="Kiswahili">
+                        Kiswahili
+                    </option>
+                    <option value="Music, Dance & Drama">
+                        Music, Dance & Drama
+                    </option>
+                    <option value="Physical Sports & Education">
+                        Physical Sports & Education
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="control-group">
+
+                <label for="difficulty">
+                    Difficulty
+                </label>
+
+                <select id="difficulty">
+
+                    <option value="Easy">
+                        Easy
+                    </option>
+
+                    <option value="Medium" selected>
+                        Medium
+                    </option>
+
+                    <option value="Hard">
+                        Hard
+                    </option>
+
+                </select>
+
+            </div>
+
+        </div>
+
+
+        <div class="start-area">
+
+            <button
+                class="primary"
+                onclick="startQuiz()"
+            >
+                🚀 START QUIZ
+            </button>
+
+            <div class="small-note">
+                Each quiz contains 5 questions.
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- QUIZ -->
+
+    <div class="card" id="quizArea">
+
+        <div class="quiz-top">
+
+            <div
+                class="progress"
+                id="progressText"
+            >
+                Question 1 of 5
+            </div>
+
+            <div
+                class="score"
+                id="scoreText"
+            >
+                Score: 0
+            </div>
+
+        </div>
+
+
+        <div
+            class="question-number"
+            id="questionNumber"
+        >
+            Question 1
+        </div>
+
+
+        <div
+            class="question"
+            id="questionText"
+        >
+        </div>
+
+
+        <div
+            class="options"
+            id="optionsContainer"
+        >
+        </div>
+
+
+        <div
+            class="explanation"
+            id="explanation"
+        >
+        </div>
+
+
+        <div class="next-area">
+
+            <button
+                class="primary"
+                id="nextButton"
+                onclick="nextQuestion()"
+                style="display:none;"
+            >
+                NEXT QUESTION →
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- FINAL RESULT -->
+
+    <div class="card" id="resultArea">
+
+        <h2>🎉 Quiz Complete!</h2>
+
+        <div
+            class="final-score"
+            id="finalScore"
+        >
+            0%
+        </div>
+
+        <div
+            class="result-message"
+            id="resultMessage"
+        >
+        </div>
+
+        <button
+            class="primary"
+            onclick="tryAgain()"
+        >
+            🔄 TRY AGAIN
+        </button>
+
+        <br>
+
+        <a
+            href="/"
+            class="home-link"
+        >
+            ← Return to LYMAR
+        </a>
+
+    </div>
+
+</div>
+
+
+<script>
+
+/* =========================
+   QUIZ DATABASE
+   ========================= */
+
+const quizDatabase = {
+
+    "Mathematics": {
+
+        "Easy": [
+
+            {
+                question: "What is 12 + 8?",
+                options: ["18", "20", "22", "24"],
+                answer: 1,
+                explanation: "12 + 8 = 20."
+            },
+
+            {
+                question: "What is 5 × 6?",
+                options: ["11", "25", "30", "35"],
+                answer: 2,
+                explanation: "5 multiplied by 6 equals 30."
+            },
+
+            {
+                question: "What is the square root of 49?",
+                options: ["5", "6", "7", "8"],
+                answer: 2,
+                explanation: "7 × 7 = 49, so the square root is 7."
+            },
+
+            {
+                question: "What is 100 ÷ 10?",
+                options: ["5", "10", "20", "50"],
+                answer: 1,
+                explanation: "100 divided by 10 equals 10."
+            },
+
+            {
+                question: "How many degrees are in a right angle?",
+                options: ["45°", "60°", "90°", "180°"],
+                answer: 2,
+                explanation: "A right angle measures 90 degrees."
+            }
+
+        ],
+
+        "Medium": [
+
+            {
+                question: "Solve: 3x + 6 = 18",
+                options: ["x = 2", "x = 4", "x = 6", "x = 8"],
+                answer: 1,
+                explanation: "3x = 18 - 6 = 12. Therefore x = 4."
+            },
+
+            {
+                question: "What is 15% of 200?",
+                options: ["15", "20", "30", "35"],
+                answer: 2,
+                explanation: "15% × 200 = 0.15 × 200 = 30."
+            },
+
+            {
+                question: "What is the area of a rectangle 8 cm long and 5 cm wide?",
+                options: ["13 cm²", "26 cm²", "40 cm²", "80 cm²"],
+                answer: 2,
+                explanation: "Area = length × width = 8 × 5 = 40 cm²."
+            },
+
+            {
+                question: "Simplify: 2x + 3x",
+                options: ["5", "5x", "6x", "x⁵"],
+                answer: 1,
+                explanation: "Like terms are added: 2x + 3x = 5x."
+            },
+
+            {
+                question: "What is the next number: 2, 4, 8, 16, ...?",
+                options: ["18", "24", "30", "32"],
+                answer: 3,
+                explanation: "Each number is multiplied by 2, so the next number is 32."
+            }
+
+        ],
+
+        "Hard": [
+
+            {
+                question: "If x² = 81 and x is positive, what is x?",
+                options: ["7", "8", "9", "10"],
+                answer: 2,
+                explanation: "The positive square root of 81 is 9."
+            },
+
+            {
+                question: "What is the derivative of x²?",
+                options: ["x", "2x", "x²", "2"],
+                answer: 1,
+                explanation: "Using the power rule, the derivative of x² is 2x."
+            },
+
+            {
+                question: "What is the sum of the interior angles of a triangle?",
+                options: ["90°", "180°", "270°", "360°"],
+                answer: 1,
+                explanation: "The interior angles of every triangle add up to 180 degrees."
+            },
+
+            {
+                question: "If sin θ = 1/2 for an acute angle, what is θ?",
+                options: ["15°", "30°", "45°", "60°"],
+                answer: 1,
+                explanation: "For an acute angle, sin 30° = 1/2."
+            },
+
+            {
+                question: "What is the determinant of [[2, 1], [3, 4]]?",
+                options: ["3", "5", "8", "11"],
+                answer: 1,
+                explanation: "Determinant = (2×4) - (1×3) = 8 - 3 = 5."
+            }
+
+        ]
+
+    },
+
+
+    "Physics": {
+
+        "Easy": [
+
+            {
+                question: "What is the SI unit of force?",
+                options: ["Joule", "Newton", "Watt", "Pascal"],
+                answer: 1,
+                explanation: "The SI unit of force is the Newton (N)."
+            },
+
+            {
+                question: "What instrument measures temperature?",
+                options: ["Barometer", "Thermometer", "Ammeter", "Voltmeter"],
+                answer: 1,
+                explanation: "A thermometer measures temperature."
+            },
+
+            {
+                question: "What force pulls objects toward Earth?",
+                options: ["Friction", "Magnetism", "Gravity", "Tension"],
+                answer: 2,
+                explanation: "Gravity attracts objects toward Earth."
+            },
+
+            {
+                question: "What is the approximate speed of light in vacuum?",
+                options: ["3 × 10⁶ m/s", "3 × 10⁸ m/s", "3 × 10¹⁰ m/s", "300 m/s"],
+                answer: 1,
+                explanation: "Light travels at approximately 3 × 10⁸ m/s in vacuum."
+            },
+
+            {
+                question: "Which quantity is measured in watts?",
+                options: ["Energy", "Power", "Force", "Mass"],
+                answer: 1,
+                explanation: "Power is measured in watts."
+            }
+
+        ],
+
+        "Medium": [
+
+            {
+                question: "What is the formula for speed?",
+                options: ["distance × time", "distance ÷ time", "time ÷ distance", "mass × acceleration"],
+                answer: 1,
+                explanation: "Speed = distance ÷ time."
+            },
+
+            {
+                question: "What happens to current if resistance increases while voltage stays constant?",
+                options: ["Current increases", "Current decreases", "Current stays the same", "Current becomes zero always"],
+                answer: 1,
+                explanation: "By Ohm's law, I = V/R. Increasing resistance decreases current when voltage is constant."
+            },
+
+            {
+                question: "What type of energy does a moving object have?",
+                options: ["Chemical", "Kinetic", "Nuclear", "Potential"],
+                answer: 1,
+                explanation: "A moving object has kinetic energy."
+            },
+
+            {
+                question: "Which law states that every action has an equal and opposite reaction?",
+                options: ["Newton's first law", "Newton's second law", "Newton's third law", "Hooke's law"],
+                answer: 2,
+                explanation: "Newton's third law describes action and reaction forces."
+            },
+
+            {
+                question: "What happens to the wavelength when frequency increases for a wave travelling at constant speed?",
+                options: ["It increases", "It decreases", "It stays constant", "It becomes zero"],
+                answer: 1,
+                explanation: "Wave speed = frequency × wavelength. At constant speed, increasing frequency decreases wavelength."
+            }
+
+        ],
+
+        "Hard": [
+
+            {
+                question: "What is the SI unit of electric charge?",
+                options: ["Ampere", "Volt", "Coulomb", "Ohm"],
+                answer: 2,
+                explanation: "Electric charge is measured in coulombs (C)."
+            },
+
+            {
+                question: "What is momentum equal to?",
+                options: ["mass × velocity", "mass × acceleration", "force × distance", "energy ÷ time"],
+                answer: 0,
+                explanation: "Momentum p = mass × velocity."
+            },
+
+            {
+                question: "Which equation represents Newton's second law?",
+                options: ["F = ma", "V = IR", "P = VI", "E = mc"],
+                answer: 0,
+                explanation: "Newton's second law is F = ma."
+            },
+
+            {
+                question: "What happens to the kinetic energy of an object if its speed doubles?",
+                options: ["It doubles", "It triples", "It becomes four times larger", "It becomes half"],
+                answer: 2,
+                explanation: "Kinetic energy is proportional to speed squared. Doubling speed makes kinetic energy four times larger."
+            },
+
+            {
+                question: "Which quantity is a vector?",
+                options: ["Mass", "Temperature", "Speed", "Velocity"],
+                answer: 3,
+                explanation: "Velocity has both magnitude and direction, so it is a vector."
+            }
+
+        ]
+
+    },
+
+
+    "Chemistry": {
+
+        "Easy": [
+
+            {
+                question: "What is the chemical symbol for oxygen?",
+                options: ["O", "Ox", "Og", "C"],
+                answer: 0,
+                explanation: "The chemical symbol for oxygen is O."
+            },
+
+            {
+                question: "What is H₂O commonly called?",
+                options: ["Hydrogen", "Water", "Oxygen", "Salt"],
+                answer: 1,
+                explanation: "H₂O is water."
+            },
+
+            {
+                question: "Which particle has a negative charge?",
+                options: ["Proton", "Neutron", "Electron", "Nucleus"],
+                answer: 2,
+                explanation: "Electrons carry negative electric charge."
+            },
+
+            {
+                question: "What is the pH of a neutral solution at room temperature?",
+                options: ["0", "5", "7", "14"],
+                answer: 2,
+                explanation: "A neutral solution has a pH of approximately 7 at room temperature."
+            },
+
+            {
+                question: "Which gas is needed for combustion?",
+                options: ["Oxygen", "Nitrogen", "Helium", "Carbon dioxide"],
+                answer: 0,
+                explanation: "Oxygen supports combustion."
+            }
+
+        ],
+
+        "Medium": [
+
+            {
+                question: "What is the atomic number of carbon?",
+                options: ["4", "6", "8", "12"],
+                answer: 1,
+                explanation: "Carbon has 6 protons, so its atomic number is 6."
+            },
+
+            {
+                question: "Which bond involves sharing electrons?",
+                options: ["Ionic bond", "Covalent bond", "Metallic bond", "Hydrogen bond"],
+                answer: 1,
+                explanation: "Covalent bonds form when atoms share electrons."
+            },
+
+            {
+                question: "What happens when an acid reacts with a base?",
+                options: ["Combustion", "Neutralization", "Freezing", "Sublimation"],
+                answer: 1,
+                explanation: "An acid and a base can react in a neutralization reaction."
+            },
+
+            {
+                question: "What is NaCl commonly known as?",
+                options: ["Sugar", "Baking soda", "Table salt", "Water"],
+                answer: 2,
+                explanation: "NaCl is sodium chloride, commonly called table salt."
+            },
+
+            {
+                question: "Which element has the symbol Fe?",
+                options: ["Fluorine", "Iron", "Francium", "Fermium"],
+                answer: 1,
+                explanation: "Fe is the symbol for iron."
+            }
+
+        ],
+
+        "Hard": [
+
+            {
+                question: "What is the oxidation state of oxygen in most compounds?",
+                options: ["+2", "+1", "-1", "-2"],
+                answer: 3,
+                explanation: "Oxygen commonly has an oxidation state of -2."
+            },
+
+            {
+                question: "What is Avogadro's constant approximately equal to?",
+                options: ["6.02 × 10²³", "9.81 × 10²", "3.00 × 10⁸", "1.60 × 10⁻¹⁹"],
+                answer: 0,
+                explanation: "Avogadro's constant is approximately 6.02 × 10²³ particles per mole."
+            },
+
+            {
+                question: "Which gas law relates pressure and volume at constant temperature?",
+                options: ["Charles's law", "Boyle's law", "Faraday's law", "Ohm's law"],
+                answer: 1,
+                explanation: "Boyle's law states that pressure and volume are inversely related at constant temperature."
+            },
+
+            {
+                question: "What is the molar mass of H₂O approximately?",
+                options: ["10 g/mol", "16 g/mol", "18 g/mol", "20 g/mol"],
+                answer: 2,
+                explanation: "H₂O has approximately 2(1) + 16 = 18 g/mol."
+            },
+
+            {
+                question: "Which particle determines the identity of an element?",
+                options: ["Number of neutrons", "Number of protons", "Number of electrons", "Number of shells"],
+                answer: 1,
+                explanation: "The number of protons determines an element's atomic number and identity."
+            }
+
+        ]
+
+    },
+
+
+    "Biology": {
+
+        "Easy": [
+
+            {
+                question: "What is the basic unit of life?",
+                options: ["Organ", "Tissue", "Cell", "System"],
+                answer: 2,
+                explanation: "The cell is the basic structural and functional unit of life."
+            },
+
+            {
+                question: "Which organ pumps blood around the body?",
+                options: ["Lung", "Heart", "Kidney", "Liver"],
+                answer: 1,
+                explanation: "The heart pumps blood around the body."
+            },
+
+            {
+                question: "Which gas do humans breathe in for respiration?",
+                options: ["Oxygen", "Carbon dioxide", "Nitrogen only", "Hydrogen"],
+                answer: 0,
+                explanation: "Humans use oxygen during aerobic respiration."
+            },
+
+            {
+                question: "Which organ is mainly responsible for gas exchange?",
+                options: ["Heart", "Lungs", "Stomach", "Brain"],
+                answer: 1,
+                explanation: "Gas exchange occurs mainly in the lungs."
+            },
+
+            {
+                question: "What green pigment helps plants absorb light?",
+                options: ["Hemoglobin", "Chlorophyll", "Melanin", "Keratin"],
+                answer: 1,
+                explanation: "Chlorophyll absorbs light energy for photosynthesis."
+            }
+
+        ],
+
+        "Medium": [
+
+            {
+                question: "Where does photosynthesis mainly occur in plant cells?",
+                options: ["Nucleus", "Chloroplasts", "Ribosomes", "Mitochondria"],
+                answer: 1,
+                explanation: "Photosynthesis mainly occurs in chloroplasts."
+            },
+
+            {
+                question: "What is the function of red blood cells?",
+                options: ["Fight infections", "Carry oxygen", "Produce hormones", "Digest food"],
+                answer: 1,
+                explanation: "Red blood cells transport oxygen using hemoglobin."
+            },
+
+            {
+                question: "Which organ filters waste from the blood?",
+                options: ["Heart", "Kidney", "Lung", "Pancreas"],
+                answer: 1,
+                explanation: "The kidneys filter the blood and help form urine."
+            },
+
+            {
+                question: "What molecule carries genetic information?",
+                options: ["ATP", "DNA", "Glucose", "Water"],
+                answer: 1,
+                explanation: "DNA stores genetic information."
+            },
+
+            {
+                question: "Which process produces two genetically similar daughter cells?",
+                options: ["Meiosis", "Mitosis", "Fertilization", "Mutation"],
+                answer: 1,
+                explanation: "Mitosis produces two genetically similar daughter cells."
+            }
+
+        ],
+
+        "Hard": [
+
+            {
+                question: "Which organelle is the main site of aerobic respiration?",
+                options: ["Nucleus", "Mitochondrion", "Chloroplast", "Golgi apparatus"],
+                answer: 1,
+                explanation: "Aerobic respiration mainly takes place in mitochondria."
+            },
+
+            {
+                question: "What is the role of enzymes?",
+                options: ["Increase activation energy", "Speed up reactions", "Stop all reactions", "Store DNA"],
+                answer: 1,
+                explanation: "Enzymes are biological catalysts that speed up chemical reactions."
+            },
+
+            {
+                question: "What is a genotype?",
+                options: ["An organism's observable characteristics", "Its genetic makeup", "Its habitat", "Its diet"],
+                answer: 1,
+                explanation: "Genotype refers to an organism's genetic makeup."
+            },
+
+            {
+                question: "Which molecule is the main energy currency of cells?",
+                options: ["DNA", "ATP", "RNA", "Glucose only"],
+                answer: 1,
+                explanation: "ATP is the main immediate energy currency of cells."
+            },
+
+            {
+                question: "What is natural selection?",
+                options: ["Random creation of species", "Differential survival and reproduction of organisms with advantageous traits", "A type of cell division", "A process that stops evolution"],
+                answer: 1,
+                explanation: "Natural selection changes populations when individuals with advantageous heritable traits tend to survive and reproduce more successfully."
+            }
+
+        ]
+
+    },
+
+
+    "ICT & Programming": {
+
+        "Easy": [
+
+            {
+                question: "What does CPU stand for?",
+                options: ["Central Processing Unit", "Computer Personal Unit", "Central Program Utility", "Control Processing User"],
+                answer: 0,
+                explanation: "CPU stands for Central Processing Unit."
+            },
+
+            {
+                question: "Which language is commonly used for web page structure?",
+                options: ["HTML", "Python", "SQL", "C++"],
+                answer: 0,
+                explanation: "HTML is used to structure web pages."
+            },
+
+            {
+                question: "What does URL stand for?",
+                options: ["Universal Resource Locator", "Uniform Resource Locator", "User Resource Link", "Universal Reference Link"],
+                answer: 1,
+                explanation: "URL stands for Uniform Resource Locator."
+            },
+
+            {
+                question: "Which device is mainly used to type text?",
+                options: ["Monitor", "Keyboard", "Speaker", "Printer"],
+                answer: 1,
+                explanation: "A keyboard is used to enter text."
+            },
+
+            {
+                question: "Which one is a programming language?",
+                options: ["Python", "Windows", "Chrome", "HTML"],
+                answer: 0,
+                explanation: "Python is a programming language."
+            }
+
+        ],
+
+        "Medium": [
+
+            {
+                question: "What does a Python function usually begin with?",
+                options: ["function", "def", "func", "define"],
+                answer: 1,
+                explanation: "Python functions are defined using the def keyword."
+            },
+
+            {
+                question: "Which data type stores True or False?",
+                options: ["String", "Integer", "Boolean", "Float"],
+                answer: 2,
+                explanation: "Boolean values represent True or False."
+            },
+
+            {
+                question: "What does HTML stand for?",
+                options: ["HyperText Markup Language", "HighText Machine Language", "Hyperlink Text Management Language", "Home Tool Markup Language"],
+                answer: 0,
+                explanation: "HTML means HyperText Markup Language."
+            },
+
+            {
+                question: "Which symbol starts a comment in Python?",
+                options: ["//", "#", "<!--", "/*"],
+                answer: 1,
+                explanation: "Python uses # to begin a single-line comment."
+            },
+
+            {
+                question: "What is a variable used for?",
+                options: ["Only displaying images", "Storing data", "Deleting programs", "Connecting electricity"],
+                answer: 1,
+                explanation: "A variable stores a value that a program can use."
+            }
+
+        ],
+
+        "Hard": [
+
+            {
+                question: "What is the time complexity of binary search on a sorted array?",
+                options: ["O(n)", "O(log n)", "O(n²)", "O(1) always"],
+                answer: 1,
+                explanation: "Binary search halves the search space each step, giving O(log n) time."
+            },
+
+            {
+                question: "Which data structure follows FIFO?",
+                options: ["Stack", "Queue", "Tree", "Graph"],
+                answer: 1,
+                explanation: "A queue follows First In, First Out."
+            },
+
+            {
+                question: "What does API stand for?",
+                options: ["Application Programming Interface", "Advanced Program Internet", "Application Process Instruction", "Automated Programming Input"],
+                answer: 0,
+                explanation: "API stands for Application Programming Interface."
+            },
+
+            {
+                question: "What is recursion?",
+                options: ["A loop that never stops", "A function calling itself", "A database", "A type of variable"],
+                answer: 1,
+                explanation: "Recursion occurs when a function calls itself, usually with a base case."
+            },
+
+            {
+                question: "Which HTTP method is commonly used to retrieve data?",
+                options: ["POST", "GET", "DELETE", "PATCH"],
+                answer: 1,
+                explanation: "GET is commonly used to retrieve data from a server."
+            }
+
+        ]
+
+    },
+
+
+    "English": {
+
+        "Easy": [
+
+            {
+                question: "Which word is a noun?",
+                options: ["Quickly", "Beautiful", "Teacher", "Run"],
+                answer: 2,
+                explanation: "Teacher is a noun because it names a person."
+            },
+
+            {
+                question: "What is the opposite of 'hot'?",
+                options: ["Warm", "Cold", "Large", "Fast"],
+                answer: 1,
+                explanation: "The opposite of hot is cold."
+            },
+
+            {
+                question: "Choose the correct sentence.",
+                options: ["She are happy.", "She is happy.", "She am happy.", "She be happy."],
+                answer: 1,
+                explanation: "The correct sentence is 'She is happy.'"
+            },
+
+            {
+                question: "What is the past tense of 'go'?",
+                options: ["Goed", "Gone", "Went", "Going"],
+                answer: 2,
+                explanation: "The simple past tense of go is went."
+            },
+
+            {
+                question: "Which word is an adjective?",
+                options: ["Beautiful", "Run", "Slowly", "Teacher"],
+                answer: 0,
+                explanation: "Beautiful is an adjective because it describes a noun."
+            }
+
+        ],
+
+        "Medium": [
+
+            {
+                question: "Choose the correct form: 'If I ___ time, I would help you.'",
+                options: ["have", "had", "will have", "having"],
+                answer: 1,
+                explanation: "The second conditional uses 'if + past simple': If I had time, I would help you."
+            },
+
+            {
+                question: "What is a synonym for 'rapid'?",
+                options: ["Slow", "Fast", "Weak", "Quiet"],
+                answer: 1,
+                explanation: "Rapid means fast or quick."
+            },
+
+            {
+                question: "Which sentence is in the passive voice?",
+                options: ["John wrote the letter.", "The letter was written by John.", "John is writing.", "John writes letters."],
+                answer: 1,
+                explanation: "In the passive voice, the receiver of the action becomes the subject."
+            },
+
+            {
+                question: "Choose the correct word: 'She has lived here ___ 2020.'",
+                options: ["for", "since", "during", "at"],
+                answer: 1,
+                explanation: "Since is used with a starting point in time such as 2020."
+            },
+
+            {
+                question: "What is the plural of 'child'?",
+                options: ["Childs", "Childes", "Children", "Childrens"],
+                answer: 2,
+                explanation: "The irregular plural of child is children."
+            }
+
+        ],
+
+        "Hard": [
+
+            {
+                question: "Which literary device compares two things using 'like' or 'as'?",
+                options: ["Metaphor", "Simile", "Irony", "Alliteration"],
+                answer: 1,
+                explanation: "A simile compares two things using words such as like or as."
+            },
+
+            {
+                question: "What is an oxymoron?",
+                options: ["A repeated sound", "A phrase combining contradictory terms", "A direct comparison", "A question without an answer"],
+                answer: 1,
+                explanation: "An oxymoron combines words or ideas that appear contradictory."
+            },
+
+            {
+                question: "Choose the grammatically correct sentence.",
+                options: ["Neither of the students are ready.", "Neither of the students is ready.", "Neither students is ready.", "Neither student are ready."],
+                answer: 1,
+                explanation: "Neither is singular in standard formal English, so 'is' is used."
+            },
+
+            {
+                question: "What does 'ambiguous' mean?",
+                options: ["Having only one meaning", "Open to more than one interpretation", "Very loud", "Completely false"],
+                answer: 1,
+                explanation: "Ambiguous means something can be understood in more than one way."
+            },
+
+            {
+                question: "Which sentence contains a metaphor?",
+                options: ["He runs like the wind.", "The classroom was a zoo.", "She is as brave as a lion.", "He jumped quickly."],
+                answer: 1,
+                explanation: "Calling the classroom a zoo is a metaphor because it directly compares without using like or as."
+            }
+
+        ]
+
+    },
+
+
+    "French": {
+
+        "Easy": [
+
+            {
+                question: "What does 'Bonjour' mean?",
+                options: ["Goodbye", "Hello", "Thank you", "Please"],
+                answer: 1,
+                explanation: "Bonjour means hello or good day."
+            },
+
+            {
+                question: "What does 'Merci' mean?",
+                options: ["Thank you", "Sorry", "Hello", "Yes"],
+                answer: 0,
+                explanation: "Merci means thank you."
+            },
+
+            {
+                question: "What is 'chat' in English?",
+                options: ["Dog", "Cat", "Bird", "Horse"],
+                answer: 1,
+                explanation: "Chat means cat."
+            },
+
+            {
+                question: "What does 'oui' mean?",
+                options: ["No", "Maybe", "Yes", "Never"],
+                answer: 2,
+                explanation: "Oui means yes."
+            },
+
+            {
+                question: "What does 'au revoir' mean?",
+                options: ["Good morning", "Goodbye", "Good night", "Welcome"],
+                answer: 1,
+                explanation: "Au revoir means goodbye."
+            }
+
+        ],
+
+        "Medium": [
+
+            {
+                question: "Choose the correct translation: 'Je suis étudiant.'",
+                options: ["I am a teacher.", "I am a student.", "I have a student.", "I was a student."],
+                answer: 1,
+                explanation: "Je suis étudiant means I am a student."
+            },
+
+            {
+                question: "What is the feminine form of 'petit'?",
+                options: ["Petite", "Petites", "Petitée", "Petitee"],
+                answer: 0,
+                explanation: "The feminine singular form is petite."
+            },
+
+            {
+                question: "Which French word means 'because'?",
+                options: ["Mais", "Parce que", "Donc", "Avec"],
+                answer: 1,
+                explanation: "Parce que means because."
+            },
+
+            {
+                question: "What is the past participle of 'faire'?",
+                options: ["Fait", "Fais", "Faisait", "Faire"],
+                answer: 0,
+                explanation: "The past participle of faire is fait."
+            },
+
+            {
+                question: "Complete: 'Nous ___ au marché.'",
+                options: ["allons", "allez", "vas", "va"],
+                answer: 0,
+                explanation: "With nous, the verb aller is allons."
+            }
+
+        ],
+
+        "Hard": [
+
+            {
+                question: "Which tense is used in 'J'avais mangé'?",
+                options: ["Présent", "Plus-que-parfait", "Futur simple", "Imparfait only"],
+                answer: 1,
+                explanation: "J'avais mangé is the plus-que-parfait."
+            },
+
+            {
+                question: "Choose the correct subjunctive form: 'Il faut que tu ___.'",
+                options: ["viens", "viendras", "viennes", "venir"],
+                answer: 2,
+                explanation: "After 'il faut que', the subjunctive is used: que tu viennes."
+            },
+
+            {
+                question: "What does 'pourtant' generally mean?",
+                options: ["Therefore", "However/nevertheless", "Because", "Always"],
+                answer: 1,
+                explanation: "Pourtant commonly means however or nevertheless."
+            },
+
+            {
+                question: "Choose the correct sentence.",
+                options: ["Je veux que tu viens.", "Je veux que tu viennes.", "Je veux tu viennes.", "Je veux que tu venir."],
+                answer: 1,
+                explanation: "After 'je veux que', the subjunctive is required: que tu viennes."
+            },
+
+            {
+                question: "What is the meaning of 'cependant'?",
+                options: ["However", "Quickly", "Before", "Always"],
+                answer: 0,
+                explanation: "Cependant means however or nevertheless."
+            }
+
+        ]
+
+    },
+
+
+    "History & Geography": {
+
+        "Easy": [
+
+            {
+                question: "What is the capital city of Rwanda?",
+                options: ["Butare", "Kigali", "Gisenyi", "Musanze"],
+                answer: 1,
+                explanation: "Kigali is the capital city of Rwanda."
+            },
+
+            {
+                question: "Which continent is Rwanda in?",
+                options: ["Asia", "Africa", "Europe", "South America"],
+                answer: 1,
+                explanation: "Rwanda is a country in East-Central Africa."
+            },
+
+            {
+                question: "What is a map used for?",
+                options: ["Cooking", "Representing places and locations", "Measuring temperature only", "Writing music"],
+                answer: 1,
+                explanation: "Maps represent places, locations, and geographic features."
+            },
+
+            {
+                question: "What is the largest ocean?",
+                options: ["Atlantic", "Indian", "Pacific", "Arctic"],
+                answer: 2,
+                explanation: "The Pacific Ocean is the largest ocean."
+            },
+
+            {
+                question: "What is a continent?",
+                options: ["A small village", "A large continuous landmass", "A river", "An ocean"],
+                answer: 1,
+                explanation: "A continent is a large continuous landmass."
+            }
+
+        ],
+
+        "Medium": [
+
+            {
+                question: "Which line divides Earth approximately into the Northern and Southern Hemispheres?",
+                options: ["Prime Meridian", "Equator", "Tropic of Cancer", "Arctic Circle"],
+                answer: 1,
+                explanation: "The Equator divides Earth into Northern and Southern Hemispheres."
+            },
+
+            {
+                question: "What is the Prime Meridian's longitude?",
+                options: ["0°", "90°", "180°", "45°"],
+                answer: 0,
+                explanation: "The Prime Meridian is 0° longitude."
+            },
+
+            {
+                question: "What is a democracy?",
+                options: ["Government by one person only", "Government in which people participate in choosing leaders", "Government without laws", "Rule by the military only"],
+                answer: 1,
+                explanation: "Democracy generally involves citizens participating in government, including through elections."
+            },
+
+            {
+                question: "Which is a renewable resource?",
+                options: ["Coal", "Oil", "Solar energy", "Natural gas"],
+                answer: 2,
+                explanation: "Solar energy is renewable because sunlight is naturally replenished."
+            },
+
+            {
+                question: "What does population density measure?",
+                options: ["Rainfall only", "People per unit area", "Number of rivers", "Height of mountains"],
+                answer: 1,
+                explanation: "Population density is the number of people living per unit of area."
+            }
+
+        ],
+
+        "Hard": [
+
+            {
+                question: "What is urbanization?",
+                options: ["Movement toward and growth of cities", "Growth of forests", "Decrease in population", "Formation of oceans"],
+                answer: 0,
+                explanation: "Urbanization is the process involving increasing concentration of people in urban areas."
+            },
+
+            {
+                question: "What is colonialism?",
+                options: ["Equal cooperation between countries", "Control of one territory by another power", "A type of weather", "A farming technique"],
+                answer: 1,
+                explanation: "Colonialism involves political and economic control of a territory by an external power."
+            },
+
+            {
+                question: "What is the main purpose of a scale on a map?",
+                options: ["Show temperature", "Relate map distance to real-world distance", "Show population only", "Show political parties"],
+                answer: 1,
+                explanation: "Map scale shows the relationship between distances on the map and actual distances."
+            },
+
+            {
+                question: "Which factor can strongly influence climate?",
+                options: ["Latitude", "Alphabet", "Currency", "Language"],
+                answer: 0,
+                explanation: "Latitude strongly influences climate because it affects the angle and amount of incoming solar radiation."
+            },
+
+            {
+                question: "What is migration?",
+                options: ["Movement of people from one place to another", "Formation of mountains", "Growth of plants", "Change in temperature"],
+                answer: 0,
+                explanation: "Migration is the movement of people between locations."
+            }
+
+        ]
+
+    },
+
+
+    "Entrepreneurship": {
+
+        "Easy": [
+
+            {
+                question: "What is a business?",
+                options: ["An activity that provides goods or services", "Only a school", "A type of weather", "A sport"],
+                answer: 0,
+                explanation: "A business provides goods or services, usually to customers."
+            },
+
+            {
+                question: "Who is an entrepreneur?",
+                options: ["A person who starts or manages a business venture", "Only a teacher", "A customer only", "A tourist"],
+                answer: 0,
+                explanation: "An entrepreneur identifies opportunities and starts or manages a business venture."
+            },
+
+            {
+                question: "What is a customer?",
+                options: ["A person who buys goods or services", "A supplier only", "A machine", "A bank"],
+                answer: 0,
+                explanation: "A customer buys goods or services."
+            },
+
+            {
+                question: "What is profit?",
+                options: ["Revenue minus costs", "Costs plus debt", "Only sales", "Only wages"],
+                answer: 0,
+                explanation: "Profit is generally the amount left after costs are deducted from revenue."
+            },
+
+            {
+                question: "What is a product?",
+                options: ["A good or service offered to customers", "Only money", "A tax", "A loan"],
+                answer: 0,
+                explanation: "A product can be a good or service offered to customers."
+            }
+
+        ],
+
+        "Medium": [
+
+            {
+                question: "What is market research?",
+                options: ["Collecting information about customers and markets", "Buying a building", "Hiring only managers", "Printing money"],
+                answer: 0,
+                explanation: "Market research gathers information to understand customers, competitors, and the market."
+            },
+
+            {
+                question: "What is a business plan?",
+                options: ["A plan describing how a business will operate and develop", "A school timetable", "A shopping list", "A bank receipt"],
+                answer: 0,
+                explanation: "A business plan outlines important aspects of how a business will operate and develop."
+            },
+
+            {
+                question: "What is a target market?",
+                options: ["A specific group of customers a business aims to serve", "A bank", "A warehouse", "A machine"],
+                answer: 0,
+                explanation: "A target market is the customer group a business aims to serve."
+            },
+
+            {
+                question: "Which is an example of a fixed cost?",
+                options: ["Rent", "Raw materials per product", "Packaging per item", "Sales commission per sale"],
+                answer: 0,
+                explanation: "Rent is often a fixed cost because it can remain relatively constant over a period."
+            },
+
+            {
+                question: "What is branding?",
+                options: ["Creating an identity for a business or product", "Counting money", "Borrowing money", "Closing a business"],
+                answer: 0,
+                explanation: "Branding creates an identifiable identity and image for a business or product."
+            }
+
+        ],
+
+        "Hard": [
+
+            {
+                question: "What is a break-even point?",
+                options: ["When total revenue equals total costs", "When costs are zero", "When sales stop", "When profit is maximum"],
+                answer: 0,
+                explanation: "At break-even, total revenue equals total costs, so there is no profit or loss."
+            },
+
+            {
+                question: "What does SWOT stand for?",
+                options: ["Strengths, Weaknesses, Opportunities, Threats", "Sales, Work, Operations, Targets", "Systems, Wages, Output, Taxes", "Strategy, Workers, Orders, Trade"],
+                answer: 0,
+                explanation: "SWOT stands for Strengths, Weaknesses, Opportunities, and Threats."
+            },
+
+            {
+                question: "What is cash flow?",
+                options: ["Movement of money into and out of a business", "Only profit", "Only sales", "The number of employees"],
+                answer: 0,
+                explanation: "Cash flow tracks money entering and leaving a business."
+            },
+
+            {
+                question: "What is opportunity cost?",
+                options: ["The value of the next best alternative given up", "The price of every product", "Total revenue", "A business tax"],
+                answer: 0,
+                explanation: "Opportunity cost is the value of the next best alternative sacrificed when making a choice."
+            },
+
+            {
+                question: "Why is customer feedback useful to a business?",
+                options: ["It can help identify areas for improvement", "It always guarantees profit", "It eliminates competition", "It removes all costs"],
+                answer: 0,
+                explanation: "Customer feedback can reveal strengths, weaknesses, and opportunities to improve products or services."
+            }
+
+        ]
+
+    },
+
+    "Psychology": {
+        "Easy": [
+            {
+                question: "What does psychology mainly study?",
+                options: [
+                    "Behavior and mental processes",
+                    "Only the human brain",
+                    "Only dreams",
+                    "Only exercise"
+                ],
+                answer: 0
+            },
+            {
+                question: "What is memory?",
+                options: [
+                    "The ability to encode, store and retrieve information",
+                    "Only speaking",
+                    "An emotion",
+                    "An exercise"
+                ],
+                answer: 0
+            },
+            {
+                question: "Which sense organ receives light?",
+                options: [
+                    "Ear",
+                    "Eye",
+                    "Nose",
+                    "Skin"
+                ],
+                answer: 1
+            },
+            {
+                question: "What is learning?",
+                options: [
+                    "A relatively lasting change resulting from experience or practice",
+                    "Forgetting",
+                    "Sleeping",
+                    "Physical growth"
+                ],
+                answer: 0
+            },
+            {
+                question: "What is an emotion?",
+                options: [
+                    "A feeling involving subjective, physical and behavioral responses",
+                    "A formula",
+                    "A map",
+                    "An instrument"
+                ],
+                answer: 0
+            }
+        ],
+        "Medium": [
+            {
+                question: "Classical conditioning is associated with which psychologist?",
+                options: [
+                    "Ivan Pavlov",
+                    "Isaac Newton",
+                    "Charles Darwin",
+                    "Albert Einstein"
+                ],
+                answer: 0
+            },
+            {
+                question: "What does working memory do?",
+                options: [
+                    "Temporarily holds and works with information",
+                    "Controls blood",
+                    "Measures temperature",
+                    "Produces sound"
+                ],
+                answer: 0
+            },
+            {
+                question: "What does positive reinforcement generally do?",
+                options: [
+                    "Increases a behavior by adding a rewarding consequence",
+                    "Always decreases behavior",
+                    "Stops motivation",
+                    "Stops learning"
+                ],
+                answer: 0
+            },
+            {
+                question: "The nature-nurture discussion compares the influence of:",
+                options: [
+                    "Genes and environment",
+                    "Weather and climate",
+                    "Music and drama",
+                    "Maps and rivers"
+                ],
+                answer: 0
+            },
+            {
+                question: "What does correlation indicate?",
+                options: [
+                    "A relationship between variables",
+                    "That one causes another",
+                    "That variables are identical",
+                    "That research failed"
+                ],
+                answer: 0
+            }
+        ],
+        "Hard": [
+            {
+                question: "What is cognitive dissonance?",
+                options: [
+                    "Discomfort caused by conflicting beliefs or behaviors",
+                    "Exercise",
+                    "Music",
+                    "Geography"
+                ],
+                answer: 0
+            },
+            {
+                question: "Observational learning is strongly associated with:",
+                options: [
+                    "Albert Bandura",
+                    "Ivan Pavlov",
+                    "Gregor Mendel",
+                    "Louis Pasteur"
+                ],
+                answer: 0
+            },
+            {
+                question: "Which brain structure is strongly associated with forming new memories?",
+                options: [
+                    "Hippocampus",
+                    "Femur",
+                    "Lung",
+                    "Kidney"
+                ],
+                answer: 0
+            },
+            {
+                question: "What is the placebo effect?",
+                options: [
+                    "A response influenced by expectations",
+                    "A rainfall method",
+                    "A dance",
+                    "A grammar rule"
+                ],
+                answer: 0
+            },
+            {
+                question: "What is an independent variable?",
+                options: [
+                    "The variable deliberately changed by the researcher",
+                    "The conclusion",
+                    "The participant's name",
+                    "The researcher's opinion"
+                ],
+                answer: 0
+            }
+        ]
+    },
+
+    "Literature": {
+        "Easy": [
+            {
+                question: "What is a protagonist?",
+                options: [
+                    "The main character in a story",
+                    "The setting",
+                    "The title",
+                    "The narrator's handwriting"
+                ],
+                answer: 0
+            },
+            {
+                question: "What is a metaphor?",
+                options: [
+                    "A direct comparison in which one thing is described as another",
+                    "A question",
+                    "A character list",
+                    "A chapter heading"
+                ],
+                answer: 0
+            },
+            {
+                question: "A simile commonly uses which words?",
+                options: [
+                    "Like or as",
+                    "Because or therefore",
+                    "And or but",
+                    "Who or whom"
+                ],
+                answer: 0
+            },
+            {
+                question: "What is setting?",
+                options: [
+                    "The time and place in which a story occurs",
+                    "The conflict only",
+                    "The author's name",
+                    "The ending only"
+                ],
+                answer: 0
+            },
+            {
+                question: "What is a stanza?",
+                options: [
+                    "A grouped set of lines in a poem",
+                    "A character",
+                    "A book cover",
+                    "A novel chapter"
+                ],
+                answer: 0
+            }
+        ],
+        "Medium": [
+            {
+                question: "What is foreshadowing?",
+                options: [
+                    "A hint about something that may happen later",
+                    "A description of the author",
+                    "A rhyme",
+                    "A character's name"
+                ],
+                answer: 0
+            },
+            {
+                question: "What is irony?",
+                options: [
+                    "A contrast between expectation and what actually happens or is meant",
+                    "Punctuation",
+                    "Setting",
+                    "A chapter title"
+                ],
+                answer: 0
+            },
+            {
+                question: "Which pronouns are commonly used in first-person narration?",
+                options: [
+                    "I and we",
+                    "He and she",
+                    "They and them",
+                    "You and yours"
+                ],
+                answer: 0
+            },
+            {
+                question: "What is a theme?",
+                options: [
+                    "A central idea or message explored in a literary work",
+                    "The character list",
+                    "The page number",
+                    "The author's address"
+                ],
+                answer: 0
+            },
+            {
+                question: "What is conflict in literature?",
+                options: [
+                    "A struggle between opposing forces",
+                    "The title",
+                    "The font size",
+                    "The number of pages"
+                ],
+                answer: 0
+            }
+        ],
+        "Hard": [
+            {
+                question: "What is dramatic irony?",
+                options: [
+                    "The audience knows something important that a character does not know",
+                    "Changing a title",
+                    "A poem without rhythm",
+                    "Silent acting"
+                ],
+                answer: 0
+            },
+            {
+                question: "What is symbolism?",
+                options: [
+                    "Using an object, action or image to represent a broader idea",
+                    "Using only dialogue",
+                    "Changing the setting",
+                    "Removing characters"
+                ],
+                answer: 0
+            },
+            {
+                question: "What is an unreliable narrator?",
+                options: [
+                    "A narrator whose account may not be fully trustworthy",
+                    "A narrator who never speaks",
+                    "The author",
+                    "A character without a name"
+                ],
+                answer: 0
+            },
+            {
+                question: "What is enjambment?",
+                options: [
+                    "Continuation of a sentence beyond a line break in poetry",
+                    "A character",
+                    "The climax",
+                    "A chapter title"
+                ],
+                answer: 0
+            },
+            {
+                question: "What is an allusion?",
+                options: [
+                    "An indirect reference to a known person, event, place or work",
+                    "A direct quotation of every character",
+                    "A setting",
+                    "A repeated chapter"
+                ],
+                answer: 0
+            }
+        ]
+    },
+
+    "Geography": {
+        "Easy": [
+            {
+                question: "What is the capital city of Rwanda?",
+                options: [
+                    "Kigali",
+                    "Huye",
+                    "Musanze",
+                    "Rubavu"
+                ],
+                answer: 0
+            },
+            {
+                question: "What line divides Earth into Northern and Southern Hemispheres?",
+                options: [
+                    "Equator",
+                    "Prime Meridian",
+                    "Tropic of Cancer",
+                    "Arctic Circle"
+                ],
+                answer: 0
+            },
+            {
+                question: "What does map scale show?",
+                options: [
+                    "The relationship between map distance and actual distance",
+                    "Temperature",
+                    "Population",
+                    "Mountain height"
+                ],
+                answer: 0
+            },
+            {
+                question: "What is weather?",
+                options: [
+                    "The short-term condition of the atmosphere",
+                    "Long-term climate",
+                    "The shape of a continent",
+                    "The number of rivers"
+                ],
+                answer: 0
+            },
+            {
+                question: "Where does a river normally begin?",
+                options: [
+                    "At its source",
+                    "At its mouth",
+                    "At its delta",
+                    "At the ocean"
+                ],
+                answer: 0
+            }
+        ],
+        "Medium": [
+            {
+                question: "Latitude measures distance:",
+                options: [
+                    "North or south of the Equator",
+                    "East or west of the Prime Meridian",
+                    "Above sea level",
+                    "Between cities"
+                ],
+                answer: 0
+            },
+            {
+                question: "Longitude measures distance:",
+                options: [
+                    "East or west of the Prime Meridian",
+                    "North or south of the Equator",
+                    "Above a mountain",
+                    "Below sea level"
+                ],
+                answer: 0
+            },
+            {
+                question: "What is relief in geography?",
+                options: [
+                    "Variation in the elevation and shape of land",
+                    "Rainfall",
+                    "Population",
+                    "Temperature"
+                ],
+                answer: 0
+            },
+            {
+                question: "Which is a renewable energy resource?",
+                options: [
+                    "Solar energy",
+                    "Coal",
+                    "Petroleum",
+                    "Natural gas"
+                ],
+                answer: 0
+            },
+            {
+                question: "What is population density?",
+                options: [
+                    "The number of people living per unit of area",
+                    "Total rainfall",
+                    "Number of rivers",
+                    "Average temperature"
+                ],
+                answer: 0
+            }
+        ],
+        "Hard": [
+            {
+                question: "Plate tectonics helps explain many:",
+                options: [
+                    "Earthquakes and volcanic activities",
+                    "Sunsets",
+                    "Ocean tides only",
+                    "Clouds only"
+                ],
+                answer: 0
+            },
+            {
+                question: "What is a rain shadow?",
+                options: [
+                    "A relatively dry area on the leeward side of a mountain",
+                    "A cloud shadow",
+                    "A river valley",
+                    "An ocean current"
+                ],
+                answer: 0
+            },
+            {
+                question: "What does GIS stand for?",
+                options: [
+                    "Geographic Information System",
+                    "Global Internet Service",
+                    "Geological Index Standard",
+                    "Geographical Island Survey"
+                ],
+                answer: 0
+            },
+            {
+                question: "What is urbanization?",
+                options: [
+                    "Growth and increasing concentration of people in urban areas",
+                    "Movement of rivers",
+                    "Formation of mountains",
+                    "Cooling of oceans"
+                ],
+                answer: 0
+            },
+            {
+                question: "What is a watershed?",
+                options: [
+                    "An area of land draining water to a common outlet",
+                    "A mountain peak",
+                    "A desert",
+                    "A coastal island"
+                ],
+                answer: 0
+            }
+        ]
+    },
+
+    "Kiswahili": {
+        "Easy": [
+            {
+                question: "What does 'Habari' commonly mean?",
+                options: [
+                    "How are you? / Hello",
+                    "Goodbye",
+                    "Book",
+                    "Water"
+                ],
+                answer: 0
+            },
+            {
+                question: "What does 'Asante' mean?",
+                options: [
+                    "Thank you",
+                    "Please",
+                    "Good morning",
+                    "Friend"
+                ],
+                answer: 0
+            },
+            {
+                question: "What does 'Maji' mean?",
+                options: [
+                    "Water",
+                    "Food",
+                    "School",
+                    "House"
+                ],
+                answer: 0
+            },
+            {
+                question: "What does 'Kitabu' mean?",
+                options: [
+                    "Book",
+                    "Chair",
+                    "Teacher",
+                    "Road"
+                ],
+                answer: 0
+            },
+            {
+                question: "What does 'Nani' mean?",
+                options: [
+                    "Who",
+                    "Where",
+                    "When",
+                    "Why"
+                ],
+                answer: 0
+            }
+        ],
+        "Medium": [
+            {
+                question: "What is the plural of 'mtoto'?",
+                options: [
+                    "Watoto",
+                    "Vitoto",
+                    "Mmitoto",
+                    "Atoto"
+                ],
+                answer: 0
+            },
+            {
+                question: "In 'alisoma', which part marks the past tense?",
+                options: [
+                    "-li-",
+                    "-na-",
+                    "-ta-",
+                    "-me-"
+                ],
+                answer: 0
+            },
+            {
+                question: "What does 'Ninapenda kusoma' mean?",
+                options: [
+                    "I like reading",
+                    "I am going home",
+                    "I am eating",
+                    "I know the teacher"
+                ],
+                answer: 0
+            },
+            {
+                question: "What is the common opposite of 'kubwa'?",
+                options: [
+                    "Ndogo",
+                    "Nzuri",
+                    "Ndefu",
+                    "Kali"
+                ],
+                answer: 0
+            },
+            {
+                question: "What does 'shule' mean?",
+                options: [
+                    "School",
+                    "Market",
+                    "River",
+                    "Village"
+                ],
+                answer: 0
+            }
+        ],
+        "Hard": [
+            {
+                question: "In 'Ni muhimu usome', what does 'usome' express?",
+                options: [
+                    "A subjunctive-type form meaning 'that you read'",
+                    "A past action",
+                    "A noun meaning book",
+                    "A plural noun"
+                ],
+                answer: 0
+            },
+            {
+                question: "In 'ninampenda', what does the 'm' indicate?",
+                options: [
+                    "The object marker for him or her",
+                    "A plural subject",
+                    "Past tense",
+                    "Future tense"
+                ],
+                answer: 0
+            },
+            {
+                question: "Which relative word is commonly used for a singular person?",
+                options: [
+                    "Ambaye",
+                    "Ambazo",
+                    "Ambalo",
+                    "Ambapo"
+                ],
+                answer: 0
+            },
+            {
+                question: "What does the passive suffix '-wa' commonly do?",
+                options: [
+                    "Changes a verb into a passive form",
+                    "Makes a noun plural",
+                    "Marks the future",
+                    "Marks a question"
+                ],
+                answer: 0
+            },
+            {
+                question: "What is the passive form of 'piga'?",
+                options: [
+                    "Pigwa",
+                    "Pigae",
+                    "Pigeni",
+                    "Kupigisha"
+                ],
+                answer: 0
+            }
+        ]
+    },
+
+    "Music, Dance & Drama": {
+        "Easy": [
+            {
+                question: "How many lines are on a standard musical staff?",
+                options: [
+                    "Five",
+                    "Three",
+                    "Seven",
+                    "Ten"
+                ],
+                answer: 0
+            },
+            {
+                question: "What is a beat in music?",
+                options: [
+                    "A steady pulse underlying music",
+                    "The song title",
+                    "The singer's name",
+                    "A costume"
+                ],
+                answer: 0
+            },
+            {
+                question: "What does tempo describe?",
+                options: [
+                    "The speed of music",
+                    "Loudness only",
+                    "Lyrics",
+                    "Instrument size"
+                ],
+                answer: 0
+            },
+            {
+                question: "What is melody?",
+                options: [
+                    "A sequence of musical pitches forming a recognizable musical line",
+                    "A costume",
+                    "A dance floor",
+                    "A script"
+                ],
+                answer: 0
+            },
+            {
+                question: "What is drama?",
+                options: [
+                    "A story presented through acting and performance",
+                    "An instrument",
+                    "An equation",
+                    "A sport"
+                ],
+                answer: 0
+            }
+        ],
+        "Medium": [
+            {
+                question: "What is rhythm?",
+                options: [
+                    "A pattern of durations and accents in music",
+                    "A singer's name",
+                    "Stage lighting",
+                    "A costume"
+                ],
+                answer: 0
+            },
+            {
+                question: "What do dynamics describe in music?",
+                options: [
+                    "Changes in loudness or softness",
+                    "Dance speed",
+                    "Number of actors",
+                    "Script length"
+                ],
+                answer: 0
+            },
+            {
+                question: "How many quarter-note beats are commonly in one 4/4 measure?",
+                options: [
+                    "Four",
+                    "Two",
+                    "Three",
+                    "Eight"
+                ],
+                answer: 0
+            },
+            {
+                question: "What is choreography?",
+                options: [
+                    "The planned arrangement of dance movements",
+                    "Writing lyrics",
+                    "Building a stage",
+                    "Tuning an instrument"
+                ],
+                answer: 0
+            },
+            {
+                question: "What is improvisation?",
+                options: [
+                    "Creating or performing spontaneously",
+                    "Memorizing every movement",
+                    "Copying a recording exactly",
+                    "Stopping a performance"
+                ],
+                answer: 0
+            }
+        ],
+        "Hard": [
+            {
+                question: "What is syncopation?",
+                options: [
+                    "Emphasizing normally weak or off-beat parts of a rhythm",
+                    "Playing slowly",
+                    "Removing rhythm",
+                    "Changing the stage"
+                ],
+                answer: 0
+            },
+            {
+                question: "What is harmony?",
+                options: [
+                    "The combination of different notes sounding together to support a melody",
+                    "Music speed",
+                    "A costume",
+                    "A stage direction"
+                ],
+                answer: 0
+            },
+            {
+                question: "What is timbre?",
+                options: [
+                    "The quality or tone color that distinguishes one sound from another",
+                    "Number of beats",
+                    "Volume only",
+                    "Concert length"
+                ],
+                answer: 0
+            },
+            {
+                question: "What are stage directions?",
+                options: [
+                    "Instructions in a script about movement, actions or performance",
+                    "Audience names",
+                    "Musical notes only",
+                    "Ticket prices"
+                ],
+                answer: 0
+            },
+            {
+                question: "What is a monologue?",
+                options: [
+                    "A long speech by one character",
+                    "A dance by two groups",
+                    "An instrument",
+                    "Stage lighting"
+                ],
+                answer: 0
+            }
+        ]
+    },
+
+    "Physical Sports & Education": {
+        "Easy": [
+            {
+                question: "Why is a warm-up important before exercise?",
+                options: [
+                    "It prepares the body for physical activity",
+                    "It replaces sleep",
+                    "It stops the heart",
+                    "It makes exercise unnecessary"
+                ],
+                answer: 0
+            },
+            {
+                question: "Why is hydration important during physical activity?",
+                options: [
+                    "It helps replace fluids lost from the body",
+                    "It increases weight immediately",
+                    "It stops sweating",
+                    "It replaces training"
+                ],
+                answer: 0
+            },
+            {
+                question: "How many players from one team are normally on the field in association football?",
+                options: [
+                    "11",
+                    "5",
+                    "7",
+                    "15"
+                ],
+                answer: 0
+            },
+            {
+                question: "What is a sprint?",
+                options: [
+                    "A short-distance run performed at high speed",
+                    "A long slow walk",
+                    "A swimming technique",
+                    "A stretching exercise"
+                ],
+                answer: 0
+            },
+            {
+                question: "What is flexibility?",
+                options: [
+                    "The range of movement possible at a joint",
+                    "The ability to lift the heaviest weight",
+                    "Running speed",
+                    "Number of players"
+                ],
+                answer: 0
+            }
+        ],
+        "Medium": [
+            {
+                question: "What is aerobic exercise?",
+                options: [
+                    "Exercise using large muscles over a sustained period",
+                    "One-second exercise",
+                    "Only stretching",
+                    "Only weightlifting"
+                ],
+                answer: 0
+            },
+            {
+                question: "What is muscular endurance?",
+                options: [
+                    "The ability of muscles to perform repeated contractions over time",
+                    "Sleeping longer",
+                    "Memorizing rules",
+                    "Jumping once"
+                ],
+                answer: 0
+            },
+            {
+                question: "What does RPE commonly measure?",
+                options: [
+                    "A person's rating of perceived exertion",
+                    "Player height",
+                    "Ball speed",
+                    "Field size"
+                ],
+                answer: 0
+            },
+            {
+                question: "Why is a cool-down used after exercise?",
+                options: [
+                    "To help the body gradually return toward its resting state",
+                    "To make exercise harder",
+                    "To stop breathing",
+                    "To replace warm-up"
+                ],
+                answer: 0
+            },
+            {
+                question: "What does fair play involve?",
+                options: [
+                    "Respecting rules, opponents and officials",
+                    "Winning by any method",
+                    "Ignoring rules",
+                    "Avoiding competition"
+                ],
+                answer: 0
+            }
+        ],
+        "Hard": [
+            {
+                question: "What does FITT stand for in exercise planning?",
+                options: [
+                    "Frequency, Intensity, Time, Type",
+                    "Fitness, Interval, Training, Technique",
+                    "Force, Impact, Timing, Teamwork",
+                    "Flexibility, Injury, Training, Tempo"
+                ],
+                answer: 0
+            },
+            {
+                question: "What is the principle of overload?",
+                options: [
+                    "Gradually increasing training demands to encourage adaptation",
+                    "Never changing training",
+                    "Avoiding activity",
+                    "Training once a year"
+                ],
+                answer: 0
+            },
+            {
+                question: "What is progressive overload?",
+                options: [
+                    "Systematically increasing training demands as the body adapts",
+                    "Stopping training",
+                    "Doing only stretching",
+                    "Reducing all activity"
+                ],
+                answer: 0
+            },
+            {
+                question: "What is agility?",
+                options: [
+                    "The ability to change body position or direction quickly and effectively",
+                    "Sleeping quickly",
+                    "Memorizing rules",
+                    "Remaining still"
+                ],
+                answer: 0
+            },
+            {
+                question: "What is interval training?",
+                options: [
+                    "Alternating periods of exercise with periods of recovery or lower activity",
+                    "Exercising continuously without rest",
+                    "Only stretching",
+                    "Only walking"
+                ],
+                answer: 0
+            }
+        ]
+    }
+};
+
+
+/* =========================
+   QUIZ VARIABLES
+   ========================= */
+
+let currentQuestions = [];
+
+let currentQuestionIndex = 0;
+
+let score = 0;
+
+let answered = false;
+
+
+/* =========================
+   START QUIZ
+   ========================= */
+
+function startQuiz() {
+
+    const subject =
+        document.getElementById("subject").value;
+
+    const difficulty =
+        document.getElementById("difficulty").value;
+
+    currentQuestions =
+        quizDatabase[subject][difficulty];
+
+    currentQuestionIndex = 0;
+
+    score = 0;
+
+    answered = false;
+
+    document.getElementById("setupArea").style.display =
+        "none";
+
+    document.getElementById("resultArea").style.display =
+        "none";
+
+    document.getElementById("quizArea").style.display =
+        "block";
+
+    document.getElementById("scoreText").textContent =
+        "Score: 0";
+
+    showQuestion();
+
+}
+
+
+/* =========================
+   SHOW QUESTION
+   ========================= */
+
+function showQuestion() {
+
+    answered = false;
+
+    const question =
+        currentQuestions[currentQuestionIndex];
+
+    document.getElementById("progressText").textContent =
+        "Question " +
+        (currentQuestionIndex + 1) +
+        " of " +
+        currentQuestions.length;
+
+    document.getElementById("questionNumber").textContent =
+        "Question " +
+        (currentQuestionIndex + 1);
+
+    document.getElementById("questionText").textContent =
+        question.question;
+
+    const optionsContainer =
+        document.getElementById("optionsContainer");
+
+    optionsContainer.innerHTML = "";
+
+    question.options.forEach(
+        function(optionText, index) {
+
+            const button =
+                document.createElement("button");
+
+            button.className =
+                "option";
+
+            button.textContent =
+                String.fromCharCode(65 + index) +
+                ". " +
+                optionText;
+
+            button.onclick =
+                function() {
+
+                    checkAnswer(index);
+
+                };
+
+            optionsContainer.appendChild(button);
+
+        }
+    );
+
+    document.getElementById("explanation").style.display =
+        "none";
+
+    document.getElementById("explanation").textContent =
+        "";
+
+    document.getElementById("nextButton").style.display =
+        "none";
+
+}
+
+
+/* =========================
+   CHECK ANSWER
+   ========================= */
+
+function checkAnswer(selectedIndex) {
+
+    if (answered) {
+        return;
+    }
+
+    answered = true;
+
+    const question =
+        currentQuestions[currentQuestionIndex];
+
+    const optionButtons =
+        document.querySelectorAll(".option");
+
+    optionButtons.forEach(
+        function(button, index) {
+
+            button.disabled = true;
+
+            if (index === question.answer) {
+
+                button.classList.add("correct");
+
+            }
+
+        }
+    );
+
+
+    if (selectedIndex === question.answer) {
+
+        score++;
+
+        document.getElementById("scoreText").textContent =
+            "Score: " + score;
+
+    } else {
+
+        optionButtons[selectedIndex]
+            .classList.add("wrong");
+
+    }
+
+
+    const explanation =
+        document.getElementById("explanation");
+
+    if (selectedIndex === question.answer) {
+
+        explanation.innerHTML =
+            "<strong>Correct! ✓</strong><br><br>" +
+            question.explanation;
+
+    } else {
+
+        explanation.innerHTML =
+            "<strong>Not quite.</strong><br><br>" +
+            "Correct answer: " +
+            question.options[question.answer] +
+            "<br><br>" +
+            question.explanation;
+
+    }
+
+    explanation.style.display =
+        "block";
+
+
+    const nextButton =
+        document.getElementById("nextButton");
+
+    nextButton.style.display =
+        "inline-block";
+
+    if (
+        currentQuestionIndex ===
+        currentQuestions.length - 1
+    ) {
+
+        nextButton.textContent =
+            "SEE FINAL RESULT →";
+
+    } else {
+
+        nextButton.textContent =
+            "NEXT QUESTION →";
+
+    }
+
+}
+
+
+/* =========================
+   NEXT QUESTION
+   ========================= */
+
+function nextQuestion() {
+
+    if (!answered) {
+        return;
+    }
+
+    currentQuestionIndex++;
+
+    if (
+        currentQuestionIndex >=
+        currentQuestions.length
+    ) {
+
+        showFinalResult();
+
+        return;
+
+    }
+
+    showQuestion();
+
+}
+
+
+/* =========================
+   FINAL RESULT
+   ========================= */
+
+function showFinalResult() {
+
+    document.getElementById("quizArea").style.display =
+        "none";
+
+    document.getElementById("resultArea").style.display =
+        "block";
+
+    const percentage =
+        Math.round(
+            (score / currentQuestions.length) * 100
+        );
+
+    document.getElementById("finalScore").textContent =
+        score +
+        " / " +
+        currentQuestions.length +
+        " (" +
+        percentage +
+        "%)";
+
+
+    let message;
+
+    if (percentage === 100) {
+
+        message =
+            "Excellent work! You answered every question correctly.";
+
+    }
+
+    else if (percentage >= 80) {
+
+        message =
+            "Great work! You have a strong understanding of this topic.";
+
+    }
+
+    else if (percentage >= 60) {
+
+        message =
+            "Good effort! Review the explanations and keep practicing.";
+
+    }
+
+    else if (percentage >= 40) {
+
+        message =
+            "Keep learning! Review this topic and try the quiz again.";
+
+    }
+
+    else {
+
+        message =
+            "Keep practicing. Use the explanations to strengthen your understanding.";
+
+    }
+
+    document.getElementById("resultMessage").textContent =
+        message;
+
+}
+
+
+/* =========================
+   TRY AGAIN
+   ========================= */
+
+function tryAgain() {
+
+    document.getElementById("resultArea").style.display =
+        "none";
+
+    document.getElementById("setupArea").style.display =
+        "block";
+
+}
+
+</script>
+
+</body>
+</html>

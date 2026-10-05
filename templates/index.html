@@ -1,0 +1,4829 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+```
+<title>LYMAR AI School Assistant</title>
+
+<style>
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background: #07111f;
+        color: white;
+    }
+
+    .header {
+        text-align: center;
+        padding: 25px;
+        background: #0d1b2a;
+        border-bottom: 1px solid #1e3a5f;
+    }
+
+    .header h1 {
+        margin: 0;
+        font-size: 42px;
+        letter-spacing: 4px;
+    }
+
+    .header p {
+        margin: 8px 0 0;
+        color: #8ecae6;
+    }
+
+    .school {
+        font-size: 14px;
+        color: #aaa;
+        margin-top: 8px;
+    }
+
+    .container {
+        max-width: 1100px;
+        margin: 30px auto;
+        padding: 0 20px;
+    }
+
+    .chat-box,
+    .calculator,
+    .vision-box,
+    .planner-box,
+    .quiz-box,
+    .vision-section {
+        background: #0d1b2a;
+        border: 1px solid #1e3a5f;
+        border-radius: 15px;
+        padding: 20px;
+    }
+
+    #subjectMode {
+        display: none;
+        margin-bottom: 12px;
+        padding: 10px 15px;
+        background: #102c3d;
+        border-left: 4px solid #4cc9f0;
+        border-radius: 8px;
+        color: #8ecae6;
+        font-weight: bold;
+    }
+
+    #messages {
+        height: 430px;
+        overflow-y: auto;
+        padding: 10px;
+        background: #081522;
+        border-radius: 10px;
+        margin-bottom: 15px;
+    }
+
+    .message {
+        padding: 15px;
+        margin: 10px 0;
+        border-radius: 10px;
+        line-height: 1.7;
+        word-wrap: break-word;
+    }
+
+    .user {
+        background: #17324d;
+        white-space: pre-wrap;
+    }
+
+    .lymar {
+        background: #102c3d;
+        border-left: 4px solid #4cc9f0;
+    }
+
+    .input-area {
+        display: flex;
+        gap: 10px;
+    }
+
+    #question {
+        flex: 1;
+        padding: 15px;
+        border: 1px solid #315a7d;
+        border-radius: 10px;
+        background: #07111f;
+        color: white;
+        font-size: 16px;
+        outline: none;
+    }
+
+    #askButton,
+    #reasonButton,
+    #calculateButton,
+    #analyzeButton,
+    #generateImageButton {
+        padding: 15px 25px;
+        border: none;
+        border-radius: 10px;
+        background: #219ebc;
+        color: white;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+    #askButton:hover,
+    #reasonButton:hover,
+    #calculateButton:hover,
+    #analyzeButton:hover,
+    #generateImageButton:hover {
+        background: #168aad;
+    }
+
+    #askButton:disabled,
+    #reasonButton:disabled,
+    #analyzeButton:disabled,
+    #generateImageButton:disabled {
+        background: #555;
+        cursor: not-allowed;
+    }
+
+    .features {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 15px;
+        margin-top: 20px;
+    }
+
+    .feature {
+        background: #0d1b2a;
+        border: 1px solid #1e3a5f;
+        border-radius: 12px;
+        padding: 20px;
+        text-align: center;
+        cursor: pointer;
+        transition: 0.2s;
+    }
+
+    .feature:hover {
+        transform: translateY(-3px);
+        border-color: #4cc9f0;
+    }
+
+    .feature h3 {
+        margin-top: 0;
+        color: #8ecae6;
+    }
+
+    /* REASONING MODE */
+
+    .reasoning-box {
+        margin-top: 20px;
+        background: #0d1b2a;
+        border: 1px solid #1e3a5f;
+        border-radius: 15px;
+        padding: 20px;
+    }
+
+    .reasoning-box h2 {
+        margin-top: 0;
+        color: #8ecae6;
+    }
+
+    .reasoning-description {
+        color: #aaa;
+        line-height: 1.6;
+    }
+
+    .reasoning-controls {
+        display: flex;
+        gap: 10px;
+        margin-top: 15px;
+    }
+
+    #reasoningQuestion {
+        flex: 1;
+        padding: 15px;
+        border: 1px solid #315a7d;
+        border-radius: 10px;
+        background: #07111f;
+        color: white;
+        font-size: 16px;
+        outline: none;
+    }
+
+    #reasonButton {
+        padding: 15px 25px;
+        border: none;
+        border-radius: 10px;
+        background: #7b2cbf;
+        color: white;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+    #reasonButton:hover {
+        background: #9d4edd;
+    }
+
+    #reasonButton:disabled {
+        background: #555;
+        cursor: not-allowed;
+    }
+
+    #reasoningResult {
+        margin-top: 15px;
+        padding: 18px;
+        min-height: 80px;
+        background: #081522;
+        border-radius: 10px;
+        border-left: 4px solid #9d4edd;
+        line-height: 1.8;
+    }
+
+    .reasoning-features {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 12px;
+    }
+
+    .reasoning-features span {
+        background: #21152d;
+        border: 1px solid #5a3475;
+        border-radius: 20px;
+        padding: 7px 12px;
+        color: #d8b4fe;
+        font-size: 13px;
+    }
+
+
+    /* QUIZ */
+
+    .quiz-box {
+        margin-top: 20px;
+        text-align: center;
+    }
+
+    .quiz-box h2,
+    .planner-box h2,
+    .vision-section h2 {
+        color: #8ecae6;
+        margin-top: 0;
+    }
+
+    .quiz-description,
+    .planner-description {
+        color: #aaa;
+        line-height: 1.6;
+    }
+
+    .quiz-features,
+    .planner-features {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 10px;
+        margin: 15px 0;
+    }
+
+    .quiz-features span,
+    .planner-features span {
+        background: #102c3d;
+        border: 1px solid #315a7d;
+        border-radius: 20px;
+        padding: 8px 14px;
+        color: #8ecae6;
+        font-size: 14px;
+    }
+
+    .quiz-button,
+    .planner-button {
+        display: inline-block;
+        text-decoration: none;
+        padding: 14px 24px;
+        border-radius: 10px;
+        background: #219ebc;
+        color: white;
+        font-weight: bold;
+        transition: 0.2s;
+    }
+
+    .quiz-button:hover,
+    .planner-button:hover {
+        background: #168aad;
+        transform: translateY(-2px);
+    }
+
+    /* PLANNER */
+
+    .planner-box {
+        margin-top: 20px;
+        text-align: center;
+        border-color: #315a7d;
+    }
+
+    .planner-box h2 {
+        font-size: 25px;
+    }
+
+    /* VISION */
+
+    .vision-box {
+        margin-top: 20px;
+    }
+
+    .vision-box h2 {
+        color: #8ecae6;
+        margin-top: 0;
+    }
+
+    .vision-description {
+        color: #aaa;
+    }
+
+    .vision-controls {
+        display: grid;
+        gap: 12px;
+        margin-top: 15px;
+    }
+
+    #imageInput {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid #315a7d;
+        border-radius: 10px;
+        background: #07111f;
+        color: white;
+    }
+
+    #imageQuestion,
+    #imageGenerationPrompt {
+        width: 100%;
+        padding: 15px;
+        border: 1px solid #315a7d;
+        border-radius: 10px;
+        background: #07111f;
+        color: white;
+        font-size: 16px;
+        outline: none;
+    }
+
+    #imagePreviewContainer {
+        display: none;
+        margin-top: 15px;
+        text-align: center;
+    }
+
+    #imagePreview {
+        max-width: 100%;
+        max-height: 350px;
+        border-radius: 12px;
+        border: 1px solid #315a7d;
+    }
+
+    #visionResult,
+    #generationStatus {
+        margin-top: 15px;
+        padding: 15px;
+        min-height: 60px;
+        background: #081522;
+        border-radius: 10px;
+        line-height: 1.7;
+    }
+
+    /* IMAGE GENERATION */
+
+    .vision-section {
+        margin-top: 20px;
+    }
+
+    .vision-section p {
+        color: #aaa;
+    }
+
+    #generatedImageContainer {
+        display: none;
+        margin-top: 20px;
+        text-align: center;
+    }
+
+    #generatedImage {
+        max-width: 100%;
+        max-height: 600px;
+        border-radius: 12px;
+        border: 1px solid #315a7d;
+    }
+
+    /* CALCULATOR */
+
+    .calculator {
+        margin-top: 20px;
+    }
+
+    .calculator h2 {
+        color: #8ecae6;
+        margin-top: 0;
+    }
+
+    .calculator-subtitle {
+        color: #aaa;
+    }
+
+    .calc-display {
+        background: #02070d;
+        border: 2px solid #315a7d;
+        border-radius: 10px;
+        padding: 15px;
+        margin-top: 15px;
+    }
+
+    #calcExpression {
+        width: 100%;
+        border: none;
+        outline: none;
+        background: transparent;
+        color: #aaa;
+        font-size: 18px;
+        text-align: right;
+    }
+
+    #calcResult {
+        width: 100%;
+        min-height: 45px;
+        margin-top: 8px;
+        color: white;
+        font-size: 30px;
+        text-align: right;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+
+    .calc-status {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 10px;
+        color: #8ecae6;
+        font-size: 14px;
+    }
+
+    .calculator-grid {
+        display: grid;
+        grid-template-columns: repeat(6, 1fr);
+        gap: 8px;
+        margin-top: 15px;
+    }
+
+    .calc-btn {
+        min-height: 52px;
+        border: 1px solid #315a7d;
+        border-radius: 8px;
+        background: #14283a;
+        color: white;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+    .calc-btn:hover {
+        background: #1d405a;
+    }
+
+    .calc-number {
+        background: #102c3d;
+    }
+
+    .calc-operation {
+        background: #173b52;
+    }
+
+    .calc-function {
+        background: #26384a;
+        color: #8ecae6;
+    }
+
+    .calc-danger {
+        background: #5b2430;
+    }
+
+    .calc-danger:hover {
+        background: #7b3040;
+    }
+
+    .calc-equals {
+        background: #219ebc;
+    }
+
+    .calc-equals:hover {
+        background: #168aad;
+    }
+
+    .calc-last {
+        background: #38526a;
+        color: #8ecae6;
+    }
+
+    .history {
+        margin-top: 15px;
+        background: #081522;
+        border-radius: 10px;
+        padding: 12px;
+    }
+
+    .history-title {
+        color: #8ecae6;
+        font-weight: bold;
+        margin-bottom: 8px;
+    }
+
+    #historyList {
+        max-height: 150px;
+        overflow-y: auto;
+        color: #bbb;
+        font-size: 14px;
+    }
+
+    .history-item {
+        padding: 5px 0;
+        border-bottom: 1px solid #182a3a;
+        cursor: pointer;
+    }
+
+    .history-item:hover {
+        color: white;
+    }
+
+    .footer {
+        text-align: center;
+        padding: 25px;
+        color: #888;
+    }
+
+    @media (max-width: 700px) {
+
+        .features {
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .input-area {
+            flex-direction: column;
+        }
+
+        #askButton,
+        #reasonButton,
+        #analyzeButton,
+        #generateImageButton {
+            width: 100%;
+        }
+
+        .calculator-grid {
+            grid-template-columns: repeat(4, 1fr);
+        }
+    }
+
+    @media (max-width: 450px) {
+
+        .features {
+            grid-template-columns: 1fr;
+        }
+
+        .calculator-grid {
+            grid-template-columns: repeat(3, 1fr);
+        }
+
+        .header h1 {
+            font-size: 32px;
+        }
+    }
+
+/* ============================================================
+   LYMAR STUDY TUTOR MODE
+   ============================================================ */
+
+.tutor-box {
+    margin: 35px auto;
+    padding: 28px;
+    max-width: 1100px;
+    border-radius: 20px;
+    background: linear-gradient(135deg, #111827, #172554);
+    border: 1px solid rgba(96, 165, 250, 0.35);
+    box-shadow: 0 10px 35px rgba(0, 0, 0, 0.35);
+}
+
+.tutor-box h2 {
+    margin-top: 0;
+    font-size: 28px;
+}
+
+.tutor-description {
+    color: #cbd5e1;
+    line-height: 1.6;
+}
+
+.tutor-controls {
+    display: grid;
+    grid-template-columns: 1fr 1fr auto;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+.tutor-controls input,
+.tutor-controls select {
+    padding: 14px;
+    border-radius: 12px;
+    border: 1px solid #334155;
+    background: #020617;
+    color: white;
+    font-size: 15px;
+}
+
+#tutorButton {
+    padding: 14px 22px;
+    border: none;
+    border-radius: 12px;
+    background: #2563eb;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+#tutorButton:hover {
+    background: #1d4ed8;
+}
+
+#tutorButton:disabled {
+    opacity: 0.6;
+    cursor: wait;
+}
+
+#tutorResult {
+    margin-top: 22px;
+    padding: 22px;
+    min-height: 120px;
+    border-radius: 15px;
+    background: #020617;
+    border: 1px solid #334155;
+    color: #e2e8f0;
+    line-height: 1.7;
+    white-space: normal;
+}
+
+.tutor-features {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 18px;
+}
+
+.tutor-features span {
+    padding: 8px 12px;
+    border-radius: 20px;
+    background: rgba(37, 99, 235, 0.15);
+    border: 1px solid rgba(96, 165, 250, 0.25);
+    color: #bfdbfe;
+}
+
+
+/* ============================================================
+   LYMAR EXAM GENERATOR
+   ============================================================ */
+
+.exam-box {
+    margin: 35px auto;
+    padding: 28px;
+    max-width: 1100px;
+    border-radius: 20px;
+    background: linear-gradient(135deg, #111827, #1e1b4b);
+    border: 1px solid rgba(139, 92, 246, 0.35);
+    box-shadow: 0 10px 35px rgba(0,0,0,.35);
+}
+
+.exam-box h2 {
+    margin-top: 0;
+    font-size: 28px;
+}
+
+.exam-description {
+    color: #cbd5e1;
+    line-height: 1.6;
+}
+
+.exam-controls {
+    display: grid;
+    grid-template-columns: 1fr 1fr 140px auto;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.exam-controls input,
+.exam-controls select {
+    padding: 14px;
+    border-radius: 12px;
+    border: 1px solid #334155;
+    background: #020617;
+    color: white;
+    font-size: 15px;
+}
+
+#examButton {
+    padding: 14px 20px;
+    border: none;
+    border-radius: 12px;
+    background: #7c3aed;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+#examButton:hover {
+    background: #6d28d9;
+}
+
+#examButton:disabled {
+    opacity: .6;
+    cursor: wait;
+}
+
+#examResult {
+    margin-top: 22px;
+    padding: 22px;
+    min-height: 120px;
+    border-radius: 15px;
+    background: #020617;
+    border: 1px solid #334155;
+    color: #e2e8f0;
+    line-height: 1.7;
+}
+
+.exam-features {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 18px;
+}
+
+.exam-features span {
+    padding: 8px 12px;
+    border-radius: 20px;
+    background: rgba(124,58,237,.15);
+    border: 1px solid rgba(167,139,250,.25);
+    color: #ddd6fe;
+}
+
+
+/* ============================================================
+   LYMAR SMART DASHBOARD
+   ============================================================ */
+
+.dashboard-box {
+    margin: 25px auto 35px;
+    padding: 28px;
+    max-width: 1100px;
+    border-radius: 22px;
+    background: linear-gradient(135deg, #0f172a, #172554);
+    border: 1px solid rgba(59,130,246,.35);
+    box-shadow: 0 12px 40px rgba(0,0,0,.35);
+}
+
+.dashboard-box h2 {
+    margin: 0 0 8px;
+    font-size: 30px;
+}
+
+.dashboard-subtitle {
+    color: #cbd5e1;
+    margin-bottom: 22px;
+}
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+}
+
+.dashboard-card {
+    padding: 18px;
+    border-radius: 16px;
+    background: rgba(2,6,23,.75);
+    border: 1px solid #334155;
+    cursor: pointer;
+    transition: .2s;
+}
+
+.dashboard-card:hover {
+    transform: translateY(-3px);
+    border-color: #60a5fa;
+    background: rgba(30,41,59,.9);
+}
+
+.dashboard-icon {
+    font-size: 28px;
+    margin-bottom: 8px;
+}
+
+.dashboard-card strong {
+    display: block;
+    color: white;
+    margin-bottom: 5px;
+}
+
+.dashboard-card span {
+    color: #94a3b8;
+    font-size: 13px;
+}
+
+.dashboard-status {
+    margin-top: 20px;
+    padding: 12px 16px;
+    border-radius: 12px;
+    background: rgba(34,197,94,.08);
+    border: 1px solid rgba(34,197,94,.2);
+    color: #bbf7d0;
+}
+
+@media (max-width: 850px) {
+    .dashboard-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 520px) {
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+
+/* ============================================================
+   LYMAR SCHOOL INFORMATION
+   ============================================================ */
+
+.school-info-box {
+    margin: 35px auto;
+    padding: 30px;
+    max-width: 1100px;
+    border-radius: 22px;
+    background: linear-gradient(135deg, #111827, #052e16);
+    border: 1px solid rgba(34,197,94,.30);
+    box-shadow: 0 12px 40px rgba(0,0,0,.35);
+}
+
+.school-info-box h2 {
+    margin-top: 0;
+    font-size: 30px;
+}
+
+.school-info-intro {
+    color: #cbd5e1;
+    line-height: 1.7;
+}
+
+.school-info-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    margin-top: 24px;
+}
+
+.school-info-card {
+    padding: 20px;
+    border-radius: 16px;
+    background: rgba(2,6,23,.70);
+    border: 1px solid #334155;
+}
+
+.school-info-card h3 {
+    margin-top: 0;
+    color: #86efac;
+}
+
+.school-info-card p {
+    color: #cbd5e1;
+    line-height: 1.6;
+    margin-bottom: 0;
+}
+
+.school-motto {
+    margin-top: 22px;
+    padding: 18px;
+    text-align: center;
+    border-radius: 15px;
+    background: rgba(34,197,94,.08);
+    border: 1px solid rgba(34,197,94,.20);
+    color: #bbf7d0;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+@media (max-width: 700px) {
+    .school-info-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+
+/* ============================================================
+   
+
+
+LYMAR QUICK HELP
+   ============================================================ */
+
+.quick-help-box {
+    margin: 35px auto;
+    padding: 28px;
+    max-width: 1100px;
+    border-radius: 22px;
+    background: linear-gradient(135deg, #172554, #312e81);
+    border: 1px solid rgba(99,102,241,.35);
+    box-shadow: 0 12px 40px rgba(0,0,0,.35);
+}
+
+.quick-help-box h2 {
+    margin-top: 0;
+    font-size: 30px;
+}
+
+.quick-help-description {
+    color: #cbd5e1;
+    line-height: 1.6;
+}
+
+.quick-help-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+    margin-top: 22px;
+}
+
+.quick-help-button {
+    padding: 18px;
+    border-radius: 15px;
+    border: 1px solid #475569;
+    background: rgba(2,6,23,.75);
+    color: white;
+    text-align: left;
+    cursor: pointer;
+    transition: .2s;
+}
+
+.quick-help-button:hover {
+    transform: translateY(-3px);
+    border-color: #818cf8;
+    background: rgba(30,41,59,.95);
+}
+
+.quick-help-icon {
+    font-size: 27px;
+    display: block;
+    margin-bottom: 8px;
+}
+
+.quick-help-button strong {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.quick-help-button span {
+    color: #94a3b8;
+    font-size: 13px;
+}
+
+@media (max-width: 700px) {
+    .quick-help-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+</style>
+```
+
+
+<style id="lymar-build-settings-css">
+.settings-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 18px;
+    margin-top: 20px;
+}
+
+.settings-card {
+    padding: 20px;
+    border-radius: 16px;
+    border: 1px solid rgba(255,255,255,0.12);
+    background: rgba(255,255,255,0.04);
+}
+
+.settings-card h3 {
+    margin-top: 0;
+}
+
+.settings-card select {
+    width: 100%;
+    padding: 11px;
+    margin-top: 8px;
+    border-radius: 10px;
+}
+
+.settings-status {
+    margin-top: 20px;
+    padding: 14px;
+    border-radius: 12px;
+    background: rgba(0,255,150,0.08);
+}
+
+.build-info {
+    margin-top: 18px;
+    padding: 18px;
+    border-radius: 14px;
+    text-align: center;
+    opacity: 0.85;
+}
+</style>
+
+
+<style id="lymar-revision-library-css">
+.revision-library {
+    margin-top: 25px;
+}
+
+.revision-controls {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin: 18px 0;
+}
+
+.revision-controls input,
+.revision-controls select {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 13px 15px;
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.12);
+    background: rgba(255,255,255,0.06);
+    color: inherit;
+    font-size: 15px;
+    outline: none;
+}
+
+.revision-controls input:focus,
+.revision-controls select:focus {
+    border-color: #6ea8fe;
+}
+
+.revision-books {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 16px;
+    margin-top: 18px;
+}
+
+.revision-book {
+    padding: 20px;
+    border-radius: 18px;
+    background: rgba(255,255,255,0.055);
+    border: 1px solid rgba(255,255,255,0.10);
+    transition: transform .2s, box-shadow .2s;
+}
+
+.revision-book:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(0,0,0,.18);
+}
+
+.revision-book-icon {
+    font-size: 35px;
+    margin-bottom: 10px;
+}
+
+.revision-book h3 {
+    margin: 5px 0 9px;
+    font-size: 17px;
+    line-height: 1.35;
+}
+
+.revision-book p {
+    margin: 5px 0;
+    opacity: .75;
+    font-size: 13px;
+}
+
+.revision-open {
+    display: inline-block;
+    margin-top: 14px;
+    padding: 10px 16px;
+    border-radius: 10px;
+    background: #2563eb;
+    color: white !important;
+    text-decoration: none;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+}
+
+.revision-open:hover {
+    background: #1d4ed8;
+}
+
+.revision-count {
+    margin-top: 10px;
+    opacity: .7;
+    font-size: 14px;
+}
+
+.revision-empty {
+    padding: 30px;
+    text-align: center;
+    opacity: .7;
+}
+
+@media (max-width: 700px) {
+    .revision-controls {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+
+
+<style id="lymar-revision-library-css">
+.revision-library {
+    margin-top: 25px;
+}
+
+.revision-controls {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin: 18px 0;
+}
+
+.revision-controls input,
+.revision-controls select {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 13px 15px;
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.12);
+    background: rgba(255,255,255,0.06);
+    color: inherit;
+    font-size: 15px;
+}
+
+.revision-books {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 16px;
+    margin-top: 18px;
+}
+
+.revision-book {
+    padding: 20px;
+    border-radius: 18px;
+    background: rgba(255,255,255,0.055);
+    border: 1px solid rgba(255,255,255,0.10);
+    transition: transform .2s, box-shadow .2s;
+}
+
+.revision-book:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(0,0,0,.18);
+}
+
+.revision-book-icon {
+    font-size: 35px;
+    margin-bottom: 10px;
+}
+
+.revision-book h3 {
+    margin: 5px 0 9px;
+    font-size: 17px;
+    line-height: 1.35;
+}
+
+.revision-book p {
+    margin: 5px 0;
+    opacity: .75;
+    font-size: 13px;
+}
+
+.revision-open {
+    display: inline-block;
+    margin-top: 14px;
+    padding: 10px 16px;
+    border-radius: 10px;
+    background: #2563eb;
+    color: white !important;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.revision-open:hover {
+    background: #1d4ed8;
+}
+
+.revision-count {
+    margin-top: 10px;
+    opacity: .7;
+    font-size: 14px;
+}
+
+.revision-empty {
+    padding: 30px;
+    text-align: center;
+    opacity: .7;
+}
+
+@media (max-width: 700px) {
+    .revision-controls {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="header">
+
+```
+<h1>LYMAR</h1>
+
+<p>AI SCHOOL ASSISTANT</p>
+
+<div class="school">
+    LYCEE SAINT MARCEL DE RUKARA
+</div>
+```
+
+</div>
+
+<div class="container">
+
+```
+<!-- AI CHAT -->
+
+<div class="chat-box">
+
+    <div id="subjectMode">
+         <span id="subjectName"></span> MODE
+    </div>
+
+    <div id="messages">
+
+        <div class="message lymar">
+
+            <strong>LYMAR:</strong>
+
+            <p>
+                Hello! I am LYMAR, your AI school assistant.
+                Choose a subject below or ask me anything about your studies.
+            </p>
+
+        </div>
+
+    </div>
+
+    <div class="input-area">
+
+        <input
+            type="text"
+            id="question"
+            placeholder="Ask LYMAR a question..."
+            onkeydown="if(event.key === 'Enter') askLYMAR()"
+        >
+
+        <button
+            id="askButton"
+            onclick="askLYMAR()"
+        >
+            ASK LYMAR
+        </button>
+
+    </div>
+
+</div>
+
+<!-- LYMAR REASONING MODE -->
+
+<div id="reasoning" class="reasoning-box">
+
+    <h2>  LYMAR REASONING MODE</h2>
+
+    <p class="reasoning-description">
+        Give LYMAR a difficult school problem and it will break
+        the solution into clear steps, explain the method,
+        check the result when possible, and give the final answer.
+    </p>
+
+    <div class="reasoning-features">
+        <span> Mathematics</span>
+        <span> Physics</span>
+        <span> Chemistry</span>
+        <span> Biology</span>
+        <span> Programming</span>
+        <span> Logic</span>
+    </div>
+
+    <div class="reasoning-controls">
+
+        <input
+            type="text"
+            id="reasoningQuestion"
+            placeholder="Example: Solve 2x + 5 = 17 and explain each step."
+            onkeydown="if(event.key === 'Enter') runReasoning()"
+        >
+
+        <button
+            id="reasonButton"
+            onclick="runReasoning()"
+        >
+              REASON
+        </button>
+
+    </div>
+
+    <div id="reasoningResult">
+
+        LYMAR Reasoning Mode is ready.
+
+    </div>
+
+</div>
+
+
+
+<!-- ============================================================
+     LYMAR STUDY TUTOR MODE
+     ============================================================ -->
+
+<div id="tutor" class="tutor-box">
+
+    <h2> LYMAR STUDY TUTOR MODE</h2>
+
+    <p class="tutor-description">
+        Choose a subject and enter a topic. LYMAR will teach the topic
+        clearly, explain the main ideas, give an example, and provide
+        a practice question.
+    </p>
+
+    <div class="tutor-features">
+        <span> Learn</span>
+        <span> Understand</span>
+        <span> Examples</span>
+        <span> Practice</span>
+        <span>  Revision</span>
+    </div>
+
+    <div class="tutor-controls">
+
+        <select id="tutorSubject">
+
+            <option>Mathematics</option>
+            <option>Physics</option>
+            <option>Chemistry</option>
+            <option>Biology</option>
+            <option>ICT and Programming</option>
+            <option>English</option>
+            <option>French</option>
+            <option>History and Geography</option>
+            <option>Entrepreneurship</option>
+            <option>Psychology</option>
+            <option>Literature</option>
+            <option>Geography</option>
+            <option>Kiswahili</option>
+            <option>Music, Dance & Drama</option>
+            <option>Physical Sports & Education</option>
+
+        </select>
+
+        <input
+            type="text"
+            id="tutorTopic"
+            placeholder="Example: Quadratic equations"
+            onkeydown="if(event.key === 'Enter') startTutor()"
+        >
+
+        <button
+            id="tutorButton"
+            onclick="startTutor()"
+        >
+             START TUTOR
+        </button>
+
+    </div>
+
+    <div id="tutorResult">
+
+        LYMAR Study Tutor is ready.
+        Choose a subject and enter a topic.
+
+    </div>
+
+</div>
+
+
+
+<!-- ============================================================
+     LYMAR EXAM GENERATOR
+     ============================================================ -->
+
+<div id="exam" class="exam-box">
+
+    <h2> LYMAR EXAM GENERATOR</h2>
+
+    <p class="exam-description">
+        Create a personalized practice exam with LYMAR.
+        Choose your subject, topic, number of questions,
+        and difficulty.
+    </p>
+
+    <div class="exam-features">
+        <span> Any Subject</span>
+        <span> Custom Topic</span>
+        <span> Practice Exam</span>
+        <span>  AI Generated</span>
+    </div>
+
+    <div class="exam-controls">
+
+        <select id="examSubject">
+            <option>Mathematics</option>
+            <option>Physics</option>
+            <option>Chemistry</option>
+            <option>Biology</option>
+            <option>ICT and Programming</option>
+            <option>English</option>
+            <option>French</option>
+            <option>History and Geography</option>
+            <option>Entrepreneurship</option>
+            <option>Psychology</option>
+            <option>Literature</option>
+            <option>Geography</option>
+            <option>Kiswahili</option>
+            <option>Music, Dance & Drama</option>
+            <option>Physical Sports & Education</option>
+        </select>
+
+        <input
+            id="examTopic"
+            type="text"
+            placeholder="Topic e.g. Trigonometry"
+        >
+
+        <select id="examCount">
+            <option value="5">5 Questions</option>
+            <option value="10">10 Questions</option>
+            <option value="15">15 Questions</option>
+        </select>
+
+        <select id="examDifficulty">
+            <option>Easy</option>
+            <option selected>Medium</option>
+            <option>Hard</option>
+        </select>
+
+    </div>
+
+    <button
+        id="examButton"
+        onclick="generateExam()"
+        style="margin-top:14px;"
+    >
+         GENERATE EXAM
+    </button>
+
+    <div id="examResult">
+        LYMAR Exam Generator is ready.
+    </div>
+
+</div>
+
+
+
+<!-- ============================================================
+     LYMAR SMART DASHBOARD
+     ============================================================ -->
+
+<div class="dashboard-box">
+
+    <h2> LYMAR SMART DASHBOARD</h2>
+
+    <div class="dashboard-subtitle">
+        Your complete AI-powered learning workspace.
+        Choose a tool to start learning.
+    </div>
+
+    <div class="dashboard-grid">
+
+        <div class="dashboard-card"
+             onclick="scrollToSection('chat')">
+            <div class="dashboard-icon">🤖</div>
+            <strong>AI Chat</strong>
+            <span>Ask LYMAR anything</span>
+        </div>
+
+        <div class="dashboard-card"
+             onclick="scrollToSection('reasoning')">
+            <div class="dashboard-icon">🧠</div>
+            <strong>Reasoning</strong>
+            <span>Solve difficult problems</span>
+        </div>
+
+        <div class="dashboard-card"
+             onclick="scrollToSection('tutor')">
+            <div class="dashboard-icon">🎓</div>
+            <strong>Study Tutor</strong>
+            <span>Learn topics step-by-step</span>
+        </div>
+
+        <div class="dashboard-card"
+             onclick="scrollToSection('exam')">
+            <div class="dashboard-icon">📝</div>
+            <strong>Exam Generator</strong>
+            <span>Create practice exams</span>
+        </div>
+
+        <div class="dashboard-card"
+             onclick="window.location.href='/quiz'">
+            <div class="dashboard-icon">📚</div>
+            <strong>Study & Quiz</strong>
+            <span>Test your knowledge</span>
+        </div>
+
+        <div class="dashboard-card"
+             onclick="window.location.href='/planner'">
+            <div class="dashboard-icon">📅</div>
+            <strong>Study Planner</strong>
+            <span>Organize your study</span>
+        </div>
+
+        <div class="dashboard-card"
+             onclick="scrollToSection('vision')">
+            <div class="dashboard-icon">👁️</div>
+            <strong>LYMAR Vision</strong>
+            <span>Analyze images</span>
+        </div>
+
+        <div class="dashboard-card"
+             onclick="scrollToSection('calculator')">
+            <div class="dashboard-icon">🧮</div>
+            <strong>Calculator</strong>
+            <span>Scientific calculations</span>
+        </div>
+
+    </div>
+
+    <div class="dashboard-status">
+         LYMAR AI Learning System - READY
+    </div>
+
+</div>
+
+
+
+
+<!-- ============================================================
+LYMAR SCHOOL INFORMATION
+============================================================ -->
+<section id="schoolInfo" class="section-card">
+
+    <div class="section-title">
+         LYCEE SAINT MARCEL DE RUKARA
+    </div>
+
+    <p class="section-subtitle">
+        Official school information
+    </p>
+
+    <div class="info-grid">
+
+        <div class="info-card">
+            <h3> School</h3>
+            <p><strong>Lycée Saint Marcel de Rukara</strong></p>
+            <p>
+                A Catholic secondary school in Rukara, Kayonza District,
+                Eastern Province of Rwanda.
+            </p>
+        </div>
+
+        <div class="info-card">
+            <h3> Location</h3>
+            <p>
+                Rukara Sector, Rukara Parish, Kayonza District,
+                Eastern Province.
+            </p>
+            <p>
+                The school is approximately 7 km from the
+                 Kayonza–Nyagatare main road.
+            </p>
+        </div>
+
+        <div class="info-card">
+            <h3> History</h3>
+            <p>
+                The school began as <strong>École Secondaire de Rukara
+                (ESR)</strong>, through an initiative of parents in Rukara
+                and priests of the Catholic Diocese of Kibungo.
+            </p>
+            <p>
+                It began with <strong>75 students</strong>:
+                50 students in S1 and 25 students in S2.
+            </p>
+        </div>
+
+        <div class="info-card">
+            <h3> Recognition</h3>
+            <p>
+                The school began on <strong>26 September 2000</strong>
+                and was officially recognized by the government from
+                the <strong>2000/2001</strong> school year.
+            </p>
+        </div>
+
+        <div class="info-card">
+            <h3>School Partnership</h3>
+            <p>
+                Lycée Saint Marcel de Rukara is associated with the
+                <strong>Catholic Diocese of Kibungo</strong>.
+            </p>
+            <p>
+                According to the school's official website, from 2023
+                it has worked with the government under an agreement.
+            </p>
+        </div>
+
+        <div class="info-card">
+            <h3> Current Academic Streams</h3>
+            <p>
+                The school's official website lists:
+            </p>
+            <ul>
+                <li>Mathematics and Science Stream 2</li>
+                <li>Languages</li>
+                <li>Arts and Humanities</li>
+            </ul>
+        </div>
+
+        <div class="info-card">
+            <h3> Language Section</h3>
+            <p>
+                In <strong>2010</strong>, the school was approved to open
+                the LKK language section:
+            </p>
+            <p>
+                <strong>English – Kiswahili – Kinyarwanda</strong>
+            </p>
+        </div>
+
+        <div class="info-card">
+            <h3> MCE Section</h3>
+            <p>
+                In <strong>2014</strong>, the school was approved to start
+                MCE:
+            </p>
+            <p>
+                <strong>Mathematics – Computer – Economics</strong>
+            </p>
+        </div>
+
+        <div class="info-card">
+            <h3> Support & Development</h3>
+            <p>
+                The school website describes support from sisters of the
+                Sacred Heart of Jesus and Mary, together with funding from
+                the Spanish organization <strong>Manos Unidas</strong>.
+            </p>
+        </div>
+
+        <div class="info-card">
+            <h3> School Leadership</h3>
+            <p>
+                The official website lists
+                <strong>AbbÃ© KUBWIMANA Cassien</strong>
+                as the school leader.
+            </p>
+            <p>
+                 <strong>+250 787 358 576</strong>
+            </p>
+        </div>
+
+        <div class="info-card">
+            <h3> School Community</h3>
+            <p>
+                The official school website currently states that the
+                school has <strong>448 students sent by the government</strong>
+                and <strong>23 government-paid staff members</strong>.
+            </p>
+        </div>
+
+        <div class="info-card">
+            <h3> 25 Years</h3>
+            <p>
+                The school marked its <strong>25th anniversary in 2025</strong>,
+                according to its official website.
+            </p>
+        </div>
+
+    </div>
+
+    <div class="school-source-box">
+        <h3> Official School Website</h3>
+
+        <p>
+            For announcements, school news, photographs and additional
+            official information, visit the school's website.
+        </p>
+
+        <a
+            href="https://www.lyceestmarcelderukara.ac.rw/"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="example-button"
+        >
+             Visit Official Website
+        </a>
+    </div>
+
+</section>
+
+<!-- SUBJECTS -->
+
+<div class="features">
+
+    <div class="feature" onclick="setSubject('Mathematics')">
+        <h3> MATHEMATICS</h3>
+        <p>Algebra, geometry, trigonometry and more.</p>
+    </div>
+
+    <div class="feature" onclick="setSubject('Physics')">
+        <h3> PHYSICS</h3>
+        <p>Mechanics, electricity, waves and physics problems.</p>
+    </div>
+
+    <div class="feature" onclick="setSubject('Chemistry')">
+        <h3> CHEMISTRY</h3>
+        <p>Reactions, equations and chemistry calculations.</p>
+    </div>
+
+    <div class="feature" onclick="setSubject('Biology')">
+        <h3> BIOLOGY</h3>
+        <p>Cells, genetics, ecology and human biology.</p>
+    </div>
+
+    <div class="feature" onclick="setSubject('ICT and Programming')">
+        <h3> ICT & PROGRAMMING</h3>
+        <p>Python, programming, computers and technology.</p>
+    </div>
+
+    <div class="feature" onclick="setSubject('English')">
+        <h3> ENGLISH</h3>
+        <p>Grammar, vocabulary, writing and communication.</p>
+    </div>
+
+    <div class="feature" onclick="setSubject('French')">
+        <h3> FRENCH</h3>
+        <p>Grammar, vocabulary and French practice.</p>
+    </div>
+
+    <div class="feature" onclick="setSubject('History and Geography')">
+        <h3> HISTORY & GEOGRAPHY</h3>
+        <p>Historical events, places and geography.</p>
+    </div>
+
+    <div class="feature" onclick="setSubject('Entrepreneurship')">
+        <h3> ENTREPRENEURSHIP</h3>
+        <p>Business ideas, marketing and entrepreneurship.</p>
+    </div>
+
+    <div class="feature" onclick="setSubject('Psychology')">
+        <h3>  PSYCHOLOGY</h3>
+        <p>Human behavior, emotions, memory and mental processes.</p>
+    </div>
+
+    <div class="feature" onclick="setSubject('Literature')">
+        <h3> LITERATURE</h3>
+        <p>Stories, poetry, novels, drama and literary analysis.</p>
+    </div>
+
+    <div class="feature" onclick="setSubject('Geography')">
+        <h3> GEOGRAPHY</h3>
+        <p>Places, environments, maps, climate and human geography.</p>
+    </div>
+
+    <div class="feature" onclick="setSubject('Kiswahili')">
+        <h3> KISWAHILI</h3>
+        <p>Kiswahili language, grammar, vocabulary and communication.</p>
+    </div>
+
+    <div class="feature" onclick="setSubject('Music, Dance & Drama')">
+        <h3> MUSIC, DANCE & DRAMA</h3>
+        <p>Music, performance, dance, drama and creative expression.</p>
+    </div>
+
+    <div class="feature" onclick="setSubject('Physical Sports & Education')">
+        <h3> PHYSICAL SPORTS & EDUCATION</h3>
+        <p>Sports, fitness, physical education and healthy living.</p>
+    </div>
+
+</div>
+
+<!-- LYMAR STUDY & QUIZ MODE -->
+
+<div class="quiz-box">
+
+    <h2> LYMAR STUDY & QUIZ MODE</h2>
+
+    <p class="quiz-description">
+        Test your knowledge, practice your subjects,
+        and challenge yourself with interactive quizzes.
+    </p>
+
+    <div class="quiz-features">
+
+        <span> 15 Subjects</span>
+        <span>  3 Difficulty Levels</span>
+        <span> Instant Results</span>
+
+    </div>
+
+    <a
+        href="/quiz"
+        class="quiz-button"
+    >
+         START STUDY & QUIZ
+    </a>
+
+</div>
+
+<!-- LYMAR STUDY PLANNER -->
+
+<div class="planner-box">
+
+    <h2> LYMAR STUDY PLANNER</h2>
+
+    <p class="planner-description">
+        Organize your study tasks, plan your revision,
+        set priorities and track your progress.
+    </p>
+
+    <div class="planner-features">
+
+        <span> 15 Subjects</span>
+        <span>Study Duration</span>
+        <span> Progress Tracking</span>
+        <span>Priorities</span>
+
+    </div>
+
+    <a
+        href="/planner"
+        class="planner-button"
+    >
+         OPEN STUDY PLANNER
+    </a>
+
+</div>
+
+<!-- LYMAR VISION -->
+
+<div class="vision-box">
+
+    <h2> LYMAR VISION</h2>
+
+    <p class="vision-description">
+        Upload an image and ask LYMAR to understand, explain,
+        read or solve what is shown.
+    </p>
+
+    <div class="vision-controls">
+
+        <input
+            type="file"
+            id="imageInput"
+            accept="image/png,image/jpeg,image/webp"
+            onchange="previewImage()"
+        >
+
+        <div id="imagePreviewContainer">
+
+            <img
+                id="imagePreview"
+                alt="Image preview"
+            >
+
+        </div>
+
+        <input
+            type="text"
+            id="imageQuestion"
+            placeholder="Example: Solve the mathematics problem in this image."
+        >
+
+        <button
+            id="analyzeButton"
+            onclick="analyzeImage()"
+        >
+             ANALYZE IMAGE
+        </button>
+
+    </div>
+
+    <div id="visionResult">
+
+        LYMAR Vision is ready. Choose an image to begin.
+
+    </div>
+
+</div>
+
+<!-- LYMAR IMAGE GENERATION -->
+
+<div class="vision-section">
+
+    <h2> LYMAR IMAGE GENERATION</h2>
+
+    <p>
+        Describe an image and LYMAR will create it for you.
+    </p>
+
+    <input
+        type="text"
+        id="imageGenerationPrompt"
+        placeholder="Example: Create a diagram of the solar system for a school project."
+    >
+
+    <br><br>
+
+    <button
+        id="generateImageButton"
+        onclick="generateImage()"
+    >
+         GENERATE IMAGE
+    </button>
+
+    <div id="generationStatus">
+        LYMAR Image Generation is ready.
+    </div>
+
+    <div id="generatedImageContainer">
+
+        <img
+            id="generatedImage"
+            alt="LYMAR generated image"
+        >
+
+    </div>
+
+</div>
+
+<!-- SCIENTIFIC CALCULATOR -->
+
+<div class="calculator">
+
+    <h2> LYMAR SCIENTIFIC CALCULATOR</h2>
+
+    <p class="calculator-subtitle">
+        Casio-style scientific calculator with LAST/Ans memory.
+    </p>
+
+    <div class="calc-display">
+
+        <input
+            id="calcExpression"
+            type="text"
+            placeholder="Enter expression..."
+            onkeydown="calculatorKeyboard(event)"
+        >
+
+        <div id="calcResult">
+            0
+        </div>
+
+    </div>
+
+    <div class="calc-status">
+
+        <span id="angleMode">
+            DEG
+        </span>
+
+        <span>
+            LAST:
+            <span id="lastValue">
+                0
+            </span>
+        </span>
+
+    </div>
+
+    <div class="calculator-grid">
+
+        <button class="calc-btn calc-function" onclick="calcFunction('sin')">sin</button>
+        <button class="calc-btn calc-function" onclick="calcFunction('cos')">cos</button>
+        <button class="calc-btn calc-function" onclick="calcFunction('tan')">tan</button>
+         <button class="calc-btn calc-function" onclick="calcFunction('asin')">sin⁻¹</button>
+         <button class="calc-btn calc-function" onclick="calcFunction('acos')">cos⁻¹</button>
+         <button class="calc-btn calc-function" onclick="calcFunction('atan')">tan⁻¹</button>
+
+        <button class="calc-btn calc-function" onclick="calcFunction('log')">log</button>
+        <button class="calc-btn calc-function" onclick="calcFunction('ln')">ln</button>
+         <button class="calc-btn calc-function" onclick="calcFunction('sqrt')">√</button>
+         <button class="calc-btn calc-function" onclick="calcFunction('square')">x²</button>
+        <button class="calc-btn calc-function" onclick="calcFunction('factorial')">x!</button>
+        <button class="calc-btn calc-function" onclick="toggleAngleMode()">DEG/RAD</button>
+
+        <button class="calc-btn calc-function" onclick="insertText('Ï€')">Ï€</button>
+        <button class="calc-btn calc-function" onclick="insertText('e')">e</button>
+        <button class="calc-btn calc-function" onclick="insertText('^')">xÊ¸</button>
+        <button class="calc-btn calc-last" onclick="insertLast()">LAST</button>
+        <button class="calc-btn calc-danger" onclick="clearCalculator()">AC</button>
+        <button class="calc-btn calc-danger" onclick="deleteLast()">DEL</button>
+
+        <button class="calc-btn calc-number" onclick="insertText('7')">7</button>
+        <button class="calc-btn calc-number" onclick="insertText('8')">8</button>
+        <button class="calc-btn calc-number" onclick="insertText('9')">9</button>
+        <button class="calc-btn calc-operation" onclick="insertText('Ã·')">Ã·</button>
+        <button class="calc-btn calc-operation" onclick="insertText('(')">(</button>
+        <button class="calc-btn calc-operation" onclick="insertText(')')">)</button>
+
+        <button class="calc-btn calc-number" onclick="insertText('4')">4</button>
+        <button class="calc-btn calc-number" onclick="insertText('5')">5</button>
+        <button class="calc-btn calc-number" onclick="insertText('6')">6</button>
+        <button class="calc-btn calc-operation" onclick="insertText('*')">×</button>
+        <button class="calc-btn calc-operation" onclick="insertText('%')">%</button>
+        <button class="calc-btn calc-operation" onclick="insertText('.')">.</button>
+
+        <button class="calc-btn calc-number" onclick="insertText('1')">1</button>
+        <button class="calc-btn calc-number" onclick="insertText('2')">2</button>
+        <button class="calc-btn calc-number" onclick="insertText('3')">3</button>
+        <button class="calc-btn calc-operation" onclick="insertText('-')">-</button>
+        <button class="calc-btn calc-function" onclick="calcFunction('exp')">EXP</button>
+         <button class="calc-btn calc-function" onclick="calcFunction('negate')">±</button>
+
+        <button class="calc-btn calc-number" onclick="insertText('0')">0</button>
+        <button class="calc-btn calc-number" onclick="insertText('00')">00</button>
+        <button class="calc-btn calc-number" onclick="insertText('000')">000</button>
+        <button class="calc-btn calc-operation" onclick="insertText('+')">+</button>
+
+        <button
+            class="calc-btn calc-equals"
+            style="grid-column: span 2;"
+            onclick="calculateScientific()"
+        >
+            =
+        </button>
+
+    </div>
+
+    <div class="history">
+
+        <div class="history-title">
+             CALCULATION HISTORY
+        </div>
+
+        <div id="historyList">
+            No calculations yet.
+        </div>
+
+    </div>
+
+</div>
+```
+
+</div>
+
+<div class="footer">
+
+```
+LYMAR AI SCHOOL ASSISTANT
+<br>
+Created by IKUZE AUDOPHEN
+```
+
+</div>
+
+<script>
+
+let selectedSubject = "";
+
+let lastAnswer = 0;
+
+let angleMode = "DEG";
+
+let calculationHistory = [];
+
+
+/* SUBJECT MODE */
+
+function setSubject(subject) {
+
+    selectedSubject = subject;
+
+    document.getElementById("subjectName").textContent =
+        subject;
+
+    document.getElementById("subjectMode").style.display =
+        "block";
+
+    const input =
+        document.getElementById("question");
+
+    input.value = "";
+
+    input.placeholder =
+        "Ask a " + subject + " question...";
+
+    input.focus();
+}
+
+
+/* AI ANSWER FORMAT */
+
+function formatAnswer(text) {
+
+    let answer =
+        text || "No answer received.";
+
+    answer =
+        answer
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
+
+    answer =
+        answer.replace(
+            /^### (.*)$/gm,
+            "<h3>$1</h3>"
+        );
+
+    answer =
+        answer.replace(
+            /^## (.*)$/gm,
+            "<h3>$1</h3>"
+        );
+
+    answer =
+        answer.replace(
+            /^# (.*)$/gm,
+            "<h3>$1</h3>"
+        );
+
+    answer =
+        answer.replace(
+            /\*\*(.*?)\*\*/g,
+            "<strong>$1</strong>"
+        );
+
+    answer =
+        answer.replace(
+            /(?<!\*)\*([^*]+)\*(?!\*)/g,
+            "<em>$1</em>"
+        );
+
+    answer =
+        answer.replace(
+            /^\s*[\*\-]\s+(.*)$/gm,
+            " $1"
+        );
+
+    answer =
+        answer.replace(
+            /^---+$/gm,
+            ""
+        );
+
+    answer =
+        answer.replace(
+            /\$\$(.*?)\$\$/gs,
+            "$1"
+        );
+
+    answer =
+        answer.replace(
+            /\\\((.*?)\\\)/gs,
+            "$1"
+        );
+
+    answer =
+        answer.replace(
+            /\\text\{(.*?)\}/g,
+            "$1"
+        );
+
+    answer =
+        answer.replace(
+            /\\mathrm\{(.*?)\}/g,
+            "$1"
+        );
+
+    answer =
+        answer.replace(
+            /\\mathbf\{(.*?)\}/g,
+            "<strong>$1</strong>"
+        );
+
+    answer =
+        answer.replace(
+            /\\cdot/g,
+            "·"
+        );
+
+    answer =
+        answer.replace(
+            /\\times/g,
+            "Ã—"
+        );
+
+    answer =
+        answer.replace(
+            /\\div/g,
+            "Ã·"
+        );
+
+    answer =
+        answer.replace(
+            /\\leq/g,
+            "≤"
+        );
+
+    answer =
+        answer.replace(
+            /\\geq/g,
+            "≥"
+        );
+
+    answer =
+        answer.replace(
+            /\\neq/g,
+            "≠"
+        );
+
+    answer =
+        answer.replace(
+            /\\rightarrow/g,
+            "→"
+        );
+
+    answer =
+        answer.replace(
+            /\n/g,
+            "<br>"
+        );
+
+    return answer;
+}
+
+
+/* ASK LYMAR */
+
+async function askLYMAR() {
+
+    const input =
+        document.getElementById("question");
+
+    const messages =
+        document.getElementById("messages");
+
+    const button =
+        document.getElementById("askButton");
+
+    const question =
+        input.value.trim();
+
+    if (!question) {
+        return;
+    }
+
+    let questionToSend =
+        question;
+
+    if (selectedSubject) {
+
+        questionToSend =
+            "Subject: " +
+            selectedSubject +
+            "\n\nStudent question: " +
+            question;
+
+    }
+
+    messages.innerHTML += `
+
+        <div class="message user">
+
+            <strong>YOU:</strong><br>
+
+            ${question}
+
+        </div>
+
+    `;
+
+    input.value = "";
+
+    button.disabled = true;
+
+    const lymarMessage =
+        document.createElement("div");
+
+    lymarMessage.className =
+        "message lymar";
+
+    lymarMessage.innerHTML =
+        "<strong>LYMAR:</strong><br>" +
+        "<span>Thinking...</span>";
+
+    messages.appendChild(
+        lymarMessage
+    );
+
+    const answerBox =
+        lymarMessage.querySelector(
+            "span"
+        );
+
+    messages.scrollTop =
+        messages.scrollHeight;
+
+    try {
+
+        const response =
+            await fetch(
+                "/ask",
+                {
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body:
+                        JSON.stringify({
+                            question:
+                                questionToSend
+                        })
+                }
+            );
+
+        const data =
+            await response.json();
+
+        answerBox.innerHTML =
+            formatAnswer(
+                data.answer ||
+                "No answer received."
+            );
+
+    }
+
+    catch (error) {
+
+        console.error(error);
+
+        answerBox.textContent =
+            "Sorry, something went wrong.";
+
+    }
+
+    button.disabled =
+        false;
+
+    input.focus();
+
+    messages.scrollTop =
+        messages.scrollHeight;
+}
+
+
+
+/* LYMAR REASONING MODE */
+
+async function runReasoning() {
+
+    const input =
+        document.getElementById(
+            "reasoningQuestion"
+        );
+
+    const button =
+        document.getElementById(
+            "reasonButton"
+        );
+
+    const result =
+        document.getElementById(
+            "reasoningResult"
+        );
+
+    const question =
+        input.value.trim();
+
+    if (!question) {
+
+        result.textContent =
+            "Please enter a problem or question.";
+
+        input.focus();
+
+        return;
+    }
+
+    let questionToSend =
+        question;
+
+    if (selectedSubject) {
+
+        questionToSend =
+            "Subject: " +
+            selectedSubject +
+            "\n\nStudent problem: " +
+            question;
+
+    }
+
+    button.disabled =
+        true;
+
+    button.textContent =
+        "  THINKING...";
+
+    result.innerHTML =
+        "<strong>LYMAR:</strong><br><br>" +
+        "LYMAR is working through the problem...";
+
+    try {
+
+        const response =
+            await fetch(
+                "/reason",
+                {
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body:
+                        JSON.stringify({
+                            question:
+                                questionToSend
+                        })
+                }
+            );
+
+        const data =
+            await response.json();
+
+        result.innerHTML =
+            "<strong>LYMAR REASONING:</strong><br><br>" +
+            formatAnswer(
+                data.answer ||
+                "No reasoning answer received."
+            );
+
+    }
+
+    catch (error) {
+
+        console.error(error);
+
+        result.textContent =
+            "Sorry, LYMAR Reasoning Mode could not process the problem.";
+
+    }
+
+    button.disabled =
+        false;
+
+    button.textContent =
+        "  REASON";
+
+    input.focus();
+}
+
+
+/* LYMAR VISION */
+
+function previewImage() {
+
+    const input =
+        document.getElementById("imageInput");
+
+    const previewContainer =
+        document.getElementById(
+            "imagePreviewContainer"
+        );
+
+    const preview =
+        document.getElementById(
+            "imagePreview"
+        );
+
+    const file =
+        input.files[0];
+
+    if (!file) {
+
+        previewContainer.style.display =
+            "none";
+
+        return;
+
+    }
+
+    const reader =
+        new FileReader();
+
+    reader.onload =
+        function(event) {
+
+            preview.src =
+                event.target.result;
+
+            previewContainer.style.display =
+                "block";
+
+        };
+
+    reader.readAsDataURL(file);
+}
+
+
+async function analyzeImage() {
+
+    const input =
+        document.getElementById("imageInput");
+
+    const question =
+        document.getElementById(
+            "imageQuestion"
+        ).value.trim();
+
+    const button =
+        document.getElementById(
+            "analyzeButton"
+        );
+
+    const result =
+        document.getElementById(
+            "visionResult"
+        );
+
+    const file =
+        input.files[0];
+
+    if (!file) {
+
+        result.textContent =
+            "Please choose an image first.";
+
+        return;
+
+    }
+
+    button.disabled =
+        true;
+
+    button.textContent =
+        " ANALYZING...";
+
+    result.textContent =
+        "LYMAR is examining the image...";
+
+    const formData =
+        new FormData();
+
+    formData.append(
+        "image",
+        file
+    );
+
+    formData.append(
+        "question",
+        question ||
+        "Describe this image and explain what it shows."
+    );
+
+    try {
+
+        const response =
+            await fetch(
+                "/analyze_image",
+                {
+                    method: "POST",
+                    body: formData
+                }
+            );
+
+        const data =
+            await response.json();
+
+        result.innerHTML =
+            "<strong>LYMAR:</strong><br><br>" +
+            formatAnswer(
+                data.answer ||
+                "No answer received."
+            );
+
+    }
+
+    catch (error) {
+
+        console.error(error);
+
+        result.textContent =
+            "Sorry, LYMAR could not analyze the image.";
+
+    }
+
+    button.disabled =
+        false;
+
+    button.textContent =
+        " ANALYZE IMAGE";
+}
+
+
+/* LYMAR IMAGE GENERATION */
+
+async function generateImage() {
+
+    const promptInput =
+        document.getElementById(
+            "imageGenerationPrompt"
+        );
+
+    const button =
+        document.getElementById(
+            "generateImageButton"
+        );
+
+    const status =
+        document.getElementById(
+            "generationStatus"
+        );
+
+    const container =
+        document.getElementById(
+            "generatedImageContainer"
+        );
+
+    const image =
+        document.getElementById(
+            "generatedImage"
+        );
+
+    const prompt =
+        promptInput.value.trim();
+
+    if (!prompt) {
+
+        status.textContent =
+            "Please describe the image you want LYMAR to create.";
+
+        return;
+
+    }
+
+    button.disabled =
+        true;
+
+    button.textContent =
+        " GENERATING...";
+
+    status.textContent =
+        "LYMAR is creating your image...";
+
+    container.style.display =
+        "none";
+
+    try {
+
+        const response =
+            await fetch(
+                "/generate_image",
+                {
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body:
+                        JSON.stringify({
+                            prompt: prompt
+                        })
+                }
+            );
+
+        const data =
+            await response.json();
+
+        if (data.image) {
+
+            image.src =
+                data.image;
+
+            container.style.display =
+                "block";
+
+            status.textContent =
+                "Image generated successfully.";
+
+        }
+
+        else {
+
+            status.textContent =
+                data.error ||
+                "LYMAR could not generate the image.";
+
+        }
+
+    }
+
+    catch (error) {
+
+        console.error(error);
+
+        status.textContent =
+            "Sorry, image generation failed.";
+
+    }
+
+    button.disabled =
+        false;
+
+    button.textContent =
+        " GENERATE IMAGE";
+}
+
+
+/* SCIENTIFIC CALCULATOR */
+
+function insertText(value) {
+
+    const input =
+        document.getElementById(
+            "calcExpression"
+        );
+
+    input.value += value;
+
+    input.focus();
+}
+
+
+function insertLast() {
+
+    const input =
+        document.getElementById(
+            "calcExpression"
+        );
+
+    input.value += "Ans";
+
+    input.focus();
+}
+
+
+function clearCalculator() {
+
+    document.getElementById(
+        "calcExpression"
+    ).value = "";
+
+    document.getElementById(
+        "calcResult"
+    ).textContent = "0";
+}
+
+
+function deleteLast() {
+
+    const input =
+        document.getElementById(
+            "calcExpression"
+        );
+
+    input.value =
+        input.value.slice(
+            0,
+            -1
+        );
+
+    input.focus();
+}
+
+
+function toggleAngleMode() {
+
+    if (angleMode === "DEG") {
+
+        angleMode = "RAD";
+
+    } else {
+
+        angleMode = "DEG";
+
+    }
+
+    document.getElementById(
+        "angleMode"
+    ).textContent =
+        angleMode;
+}
+
+
+function calcFunction(functionName) {
+
+    const input =
+        document.getElementById(
+            "calcExpression"
+        );
+
+    const value =
+        input.value.trim();
+
+    if (!value) {
+
+        input.value =
+            functionName + "(";
+
+        input.focus();
+
+        return;
+    }
+
+    try {
+
+        const number =
+            evaluateExpression(value);
+
+        let result;
+
+        if (functionName === "sin") {
+
+            result =
+                Math.sin(
+                    toRadians(number)
+                );
+
+        }
+
+        else if (functionName === "cos") {
+
+            result =
+                Math.cos(
+                    toRadians(number)
+                );
+
+        }
+
+        else if (functionName === "tan") {
+
+            result =
+                Math.tan(
+                    toRadians(number)
+                );
+
+        }
+
+        else if (functionName === "asin") {
+
+            result =
+                fromRadians(
+                    Math.asin(number)
+                );
+
+        }
+
+        else if (functionName === "acos") {
+
+            result =
+                fromRadians(
+                    Math.acos(number)
+                );
+
+        }
+
+        else if (functionName === "atan") {
+
+            result =
+                fromRadians(
+                    Math.atan(number)
+                );
+
+        }
+
+        else if (functionName === "log") {
+
+            result =
+                Math.log10(number);
+
+        }
+
+        else if (functionName === "ln") {
+
+            result =
+                Math.log(number);
+
+        }
+
+        else if (functionName === "sqrt") {
+
+            result =
+                Math.sqrt(number);
+
+        }
+
+        else if (functionName === "square") {
+
+            result =
+                number * number;
+
+        }
+
+        else if (functionName === "factorial") {
+
+            result =
+                factorial(number);
+
+        }
+
+        else if (functionName === "exp") {
+
+            result =
+                Math.exp(number);
+
+        }
+
+        else if (functionName === "negate") {
+
+            result =
+                -number;
+
+        }
+
+        else {
+
+            return;
+
+        }
+
+        setAnswer(
+            result,
+             value + " → " + result
+        );
+
+    }
+
+    catch (error) {
+
+        showCalculatorError();
+
+    }
+}
+
+
+function toRadians(value) {
+
+    if (angleMode === "RAD") {
+        return value;
+    }
+
+    return value * Math.PI / 180;
+}
+
+
+function fromRadians(value) {
+
+    if (angleMode === "RAD") {
+        return value;
+    }
+
+    return value * 180 / Math.PI;
+}
+
+
+function factorial(number) {
+
+    if (
+        !Number.isInteger(number) ||
+        number < 0 ||
+        number > 170
+    ) {
+
+        throw new Error(
+            "Invalid factorial"
+        );
+
+    }
+
+    let result = 1;
+
+    for (
+        let i = 2;
+        i <= number;
+        i++
+    ) {
+
+        result *= i;
+
+    }
+
+    return result;
+}
+
+
+function evaluateExpression(expression) {
+
+    let safe =
+        expression
+        .replace(/Ã—/g, "*")
+        .replace(/Ã·/g, "/")
+         .replace(/−/g, "-")
+        .replace(/\^/g, "**")
+        .replace(/Ï€/g, "Math.PI")
+        .replace(/\be\b/g, "Math.E")
+        .replace(
+            /\bAns\b/g,
+            "(" + lastAnswer + ")"
+        );
+
+    if (
+        !/^[0-9+\-*/().%\sA-Za-z_*]+$/.test(
+            safe
+        )
+    ) {
+
+        throw new Error(
+            "Invalid characters"
+        );
+
+    }
+
+    if (
+        /[A-Za-z_]+/.test(
+            safe.replace(
+                /Math\.PI|Math\.E/g,
+                ""
+            )
+        )
+    ) {
+
+        throw new Error(
+            "Invalid expression"
+        );
+
+    }
+
+    return Function(
+        '"use strict"; return (' +
+        safe +
+        ')'
+    )();
+}
+
+
+function calculateScientific() {
+
+    const input =
+        document.getElementById(
+            "calcExpression"
+        );
+
+    const expression =
+        input.value.trim();
+
+    if (!expression) {
+        return;
+    }
+
+    try {
+
+        const result =
+            evaluateExpression(
+                expression
+            );
+
+        if (
+            typeof result !== "number" ||
+            !Number.isFinite(result)
+        ) {
+
+            throw new Error(
+                "Invalid result"
+            );
+
+        }
+
+        setAnswer(
+            result,
+            expression +
+            " = " +
+            result
+        );
+
+    }
+
+    catch (error) {
+
+        showCalculatorError();
+
+    }
+}
+
+
+function setAnswer(
+    result,
+    historyText
+) {
+
+    lastAnswer =
+        result;
+
+    document.getElementById(
+        "calcResult"
+    ).textContent =
+        formatNumber(result);
+
+    document.getElementById(
+        "lastValue"
+    ).textContent =
+        formatNumber(result);
+
+    addHistory(
+        historyText
+    );
+}
+
+
+function formatNumber(number) {
+
+    if (
+        Math.abs(number) < 1e-12
+    ) {
+
+        number = 0;
+
+    }
+
+    return Number(
+        number.toPrecision(12)
+    ).toString();
+}
+
+
+function showCalculatorError() {
+
+    document.getElementById(
+        "calcResult"
+    ).textContent =
+        "Error";
+}
+
+
+function addHistory(text) {
+
+    calculationHistory.unshift(text);
+
+    if (
+        calculationHistory.length > 20
+    ) {
+
+        calculationHistory.pop();
+
+    }
+
+    renderHistory();
+}
+
+
+function renderHistory() {
+
+    const history =
+        document.getElementById(
+            "historyList"
+        );
+
+    if (
+        calculationHistory.length === 0
+    ) {
+
+        history.textContent =
+            "No calculations yet.";
+
+        return;
+    }
+
+    history.innerHTML = "";
+
+    calculationHistory.forEach(
+        function(item) {
+
+            const div =
+                document.createElement(
+                    "div"
+                );
+
+            div.className =
+                "history-item";
+
+            div.textContent =
+                item;
+
+            div.onclick =
+                function() {
+
+                    document.getElementById(
+                        "calcExpression"
+                    ).value =
+                        item.split(
+                            " = "
+                        )[0];
+
+                };
+
+            history.appendChild(div);
+
+        }
+    );
+}
+
+
+function calculatorKeyboard(event) {
+
+    if (
+        event.key === "Enter"
+    ) {
+
+        event.preventDefault();
+
+        calculateScientific();
+
+    }
+
+    else if (
+        event.key === "Escape"
+    ) {
+
+        clearCalculator();
+
+    }
+}
+
+
+/* ============================================================
+   LYMAR STUDY TUTOR MODE
+   ============================================================ */
+
+async function startTutor() {
+
+    const subject =
+        document.getElementById("tutorSubject").value;
+
+    const topicInput =
+        document.getElementById("tutorTopic");
+
+    const button =
+        document.getElementById("tutorButton");
+
+    const result =
+        document.getElementById("tutorResult");
+
+    const topic =
+        topicInput.value.trim();
+
+    if (!topic) {
+
+        result.textContent =
+            "Please enter a topic you want LYMAR to teach.";
+
+        topicInput.focus();
+
+        return;
+    }
+
+    button.disabled = true;
+
+    button.textContent =
+        " TEACHING...";
+
+    result.innerHTML =
+        "<strong>LYMAR:</strong><br><br>" +
+        "Preparing your lesson...";
+
+    try {
+
+        const response =
+            await fetch(
+                "/reason",
+                {
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body:
+                        JSON.stringify({
+                            question:
+                                "You are LYMAR Study Tutor. " +
+                                "Teach this student clearly and simply. " +
+                                "Do not reveal private chain-of-thought. " +
+                                "Give useful educational steps only. " +
+                                "Use this structure: " +
+                                "1. Topic overview, " +
+                                "2. Key ideas, " +
+                                "3. Explanation, " +
+                                "4. Worked example, " +
+                                "5. Common mistake, " +
+                                "6. Practice question. " +
+                                "Subject: " +
+                                subject +
+                                ". Topic: " +
+                                topic
+                        })
+                }
+            );
+
+        const data =
+            await response.json();
+
+        result.innerHTML =
+            "<strong> LYMAR STUDY TUTOR</strong><br><br>" +
+            formatAnswer(
+                data.answer ||
+                "No lesson was received."
+            );
+
+    }
+
+    catch (error) {
+
+        console.error(error);
+
+        result.textContent =
+            "Sorry, LYMAR Study Tutor could not process the lesson.";
+
+    }
+
+    button.disabled = false;
+
+    button.textContent =
+        " START TUTOR";
+
+    topicInput.focus();
+}
+
+
+/* ============================================================
+   LYMAR EXAM GENERATOR
+   ============================================================ */
+
+async function generateExam() {
+
+    const subject =
+        document.getElementById("examSubject").value;
+
+    const topic =
+        document.getElementById("examTopic").value.trim();
+
+    const count =
+        document.getElementById("examCount").value;
+
+    const difficulty =
+        document.getElementById("examDifficulty").value;
+
+    const button =
+        document.getElementById("examButton");
+
+    const result =
+        document.getElementById("examResult");
+
+    if (!topic) {
+
+        result.textContent =
+            "Please enter an exam topic.";
+
+        document.getElementById("examTopic").focus();
+
+        return;
+    }
+
+    button.disabled = true;
+    button.textContent = " GENERATING...";
+
+    result.innerHTML =
+        "<strong>LYMAR:</strong><br><br>" +
+        "Creating your practice exam...";
+
+    try {
+
+        const response =
+            await fetch(
+                "/reason",
+                {
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body:
+                        JSON.stringify({
+                            question:
+                                "Create a school practice exam. " +
+                                "Subject: " + subject +
+                                ". Topic: " + topic +
+                                ". Number of questions: " + count +
+                                ". Difficulty: " + difficulty +
+                                ". " +
+                                "Number every question clearly. " +
+                                "Use a mixture of suitable school exam " +
+                                "question types. " +
+                                "After the questions, provide an ANSWER KEY " +
+                                "with the correct answers. " +
+                                "Keep the exam educational and appropriate " +
+                                "for a secondary school student."
+                        })
+                }
+            );
+
+        const data =
+            await response.json();
+
+        result.innerHTML =
+            "<strong> LYMAR PRACTICE EXAM</strong><br><br>" +
+            formatAnswer(
+                data.answer ||
+                "No exam was generated."
+            );
+
+    }
+
+    catch (error) {
+
+        console.error(error);
+
+        result.textContent =
+            "Sorry, LYMAR could not generate the exam.";
+
+    }
+
+    button.disabled = false;
+    button.textContent = " GENERATE EXAM";
+}
+
+
+/* ============================================================
+   LYMAR SMART DASHBOARD
+   ============================================================ */
+
+function scrollToSection(type) {
+
+    const targets = {
+
+        chat: [
+            "chat",
+            "chatBox",
+            "question",
+            "userInput",
+            "messageInput"
+        ],
+
+        reasoning: [
+            "reasoningQuestion",
+            "reasonButton"
+        ],
+
+        tutor: [
+            "tutorSubject",
+            "tutorTopic"
+        ],
+
+        exam: [
+            "examSubject",
+            "examTopic"
+        ],
+
+        vision: [
+            "imageInput",
+            "vision"
+        ],
+
+        calculator: [
+            "calculator",
+            "calculatorDisplay"
+        ]
+
+    };
+
+    const ids = targets[type] || [];
+
+    for (const id of ids) {
+
+        const element =
+            document.getElementById(id);
+
+        if (element) {
+
+            element.scrollIntoView({
+                behavior: "smooth",
+                block: "center"
+            });
+
+            return;
+        }
+    }
+
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
+}
+
+
+/* ============================================================
+   LYMAR QUICK HELP
+   ============================================================ */
+
+function quickHelp(type) {
+
+    if (type === "math") {
+
+        scrollToSection("reasoning");
+
+        const input =
+            document.getElementById("reasoningQuestion");
+
+        if (input) {
+            input.placeholder =
+                "Example: Solve 2x + 5 = 17";
+            input.focus();
+        }
+
+        return;
+    }
+
+    if (type === "topic") {
+
+        scrollToSection("tutor");
+
+        const input =
+            document.getElementById("tutorTopic");
+
+        if (input) {
+            input.focus();
+        }
+
+        return;
+    }
+
+    if (type === "revision") {
+
+        scrollToSection("exam");
+
+        const input =
+            document.getElementById("examTopic");
+
+        if (input) {
+            input.focus();
+        }
+
+        return;
+    }
+
+    if (type === "science") {
+
+        scrollToSection("tutor");
+
+        const subject =
+            document.getElementById("tutorSubject");
+
+        if (subject) {
+            subject.value = "Physics";
+        }
+
+        const input =
+            document.getElementById("tutorTopic");
+
+        if (input) {
+            input.focus();
+        }
+
+        return;
+    }
+
+    if (type === "programming") {
+
+        scrollToSection("tutor");
+
+        const subject =
+            document.getElementById("tutorSubject");
+
+        if (subject) {
+            subject.value = "ICT and Programming";
+        }
+
+        const input =
+            document.getElementById("tutorTopic");
+
+        if (input) {
+            input.focus();
+        }
+
+        return;
+    }
+
+    if (type === "quiz") {
+
+        window.location.href = "/quiz";
+
+    }
+}
+
+</script>
+
+
+<!-- ============================================================
+LYMAR BUILD SETTINGS
+============================================================ -->
+<section id="buildSettings" class="section-card">
+
+    <div class="section-title">
+         LYMAR BUILD SETTINGS
+    </div>
+
+    <p class="section-subtitle">
+        Customize your LYMAR experience
+    </p>
+
+    <div class="settings-grid">
+
+        <div class="settings-card">
+            <h3> Appearance</h3>
+
+            <label for="themeSetting">Theme</label>
+            <select id="themeSetting" onchange="applyBuildSettings()">
+                <option value="dark">Dark</option>
+                <option value="light">Light</option>
+            </select>
+        </div>
+
+        <div class="settings-card">
+            <h3> Sound</h3>
+
+            <label>
+                <input
+                    type="checkbox"
+                    id="soundSetting"
+                    checked
+                    onchange="saveBuildSettings()"
+                >
+                Enable interface sounds
+            </label>
+        </div>
+
+        <div class="settings-card">
+            <h3> AI System</h3>
+
+            <p><strong>AI:</strong> Gemini-powered</p>
+            <p><strong>Mode:</strong> Educational Assistant</p>
+            <p><strong>Status:</strong> <span id="settingsAIStatus">READY</span></p>
+        </div>
+
+        <div class="settings-card">
+            <h3> School</h3>
+
+            <p><strong>Lycée Saint Marcel de Rukara</strong></p>
+            <p>Creator: <strong>IKUZE AUDOPHEN</strong></p>
+        </div>
+
+        <div class="settings-card">
+            <h3> Local Settings</h3>
+
+            <p>
+                Your appearance and sound preferences are saved
+                in this browser.
+            </p>
+
+            <button
+                class="example-button"
+                onclick="saveBuildSettings()"
+            >
+                 Save Settings
+            </button>
+        </div>
+
+        <div class="settings-card">
+            <h3> Reset</h3>
+
+            <p>
+                Restore LYMAR's default interface settings.
+            </p>
+
+            <button
+                class="example-button"
+                onclick="resetBuildSettings()"
+            >
+                 Reset Settings
+            </button>
+        </div>
+
+    </div>
+
+    <div class="settings-status" id="buildSettingsStatus">
+        Settings ready.
+    </div>
+
+    <div class="build-info">
+        <strong>LYMAR AI SCHOOL ASSISTANT</strong><br>
+        Version 1.0<br>
+        School: LYCEE SAINT MARCEL DE RUKARA<br>
+        Creator: IKUZE AUDOPHEN
+    </div>
+
+</section>
+
+
+
+<script id="lymar-build-settings-js">
+function saveBuildSettings() {
+    const theme = document.getElementById("themeSetting");
+    const sound = document.getElementById("soundSetting");
+
+    if (!theme || !sound) return;
+
+    localStorage.setItem(
+        "lymar_theme",
+        theme.value
+    );
+
+    localStorage.setItem(
+        "lymar_sound",
+        sound.checked ? "on" : "off"
+    );
+
+    applyBuildSettings();
+
+    const status = document.getElementById("buildSettingsStatus");
+
+    if (status) {
+        status.textContent = " Settings saved successfully.";
+    }
+}
+
+function applyBuildSettings() {
+    const theme = document.getElementById("themeSetting");
+
+    if (!theme) return;
+
+    if (theme.value === "light") {
+        document.body.classList.add("lymar-light-mode");
+    } else {
+        document.body.classList.remove("lymar-light-mode");
+    }
+
+    localStorage.setItem(
+        "lymar_theme",
+        theme.value
+    );
+}
+
+function loadBuildSettings() {
+    const theme = document.getElementById("themeSetting");
+    const sound = document.getElementById("soundSetting");
+
+    if (!theme || !sound) return;
+
+    const savedTheme =
+        localStorage.getItem("lymar_theme") || "dark";
+
+    const savedSound =
+        localStorage.getItem("lymar_sound") || "on";
+
+    theme.value = savedTheme;
+    sound.checked = savedSound === "on";
+
+    applyBuildSettings();
+}
+
+function resetBuildSettings() {
+    localStorage.removeItem("lymar_theme");
+    localStorage.removeItem("lymar_sound");
+
+    const theme = document.getElementById("themeSetting");
+    const sound = document.getElementById("soundSetting");
+
+    if (theme) theme.value = "dark";
+    if (sound) sound.checked = true;
+
+    applyBuildSettings();
+
+    const status = document.getElementById("buildSettingsStatus");
+
+    if (status) {
+        status.textContent = " Settings restored to default.";
+    }
+}
+
+document.addEventListener(
+    "DOMContentLoaded",
+    loadBuildSettings
+);
+</script>
+
+
+
+<section class="section-card revision-library" id="revisionLibrary">
+
+    <div style="font-size:14px; opacity:.7; margin-bottom:6px;">
+        STUDENT LEARNING CENTER
+    </div>
+
+    <h2> LYMAR STUDENT REVISION LIBRARY</h2>
+
+    <p>
+        Access your school revision books directly from LYMAR.
+        Choose your class or search for a subject or book.
+    </p>
+
+    <div class="revision-controls">
+
+        <select id="revisionClass">
+            <option value="">All Classes</option>
+            <option value="S1">S1</option>
+            <option value="S2">S2</option>
+            <option value="S3">S3</option>
+            <option value="S4">S4</option>
+            <option value="S5">S5</option>
+        </select>
+
+        <input
+            type="text"
+            id="revisionSearch"
+            placeholder="Search a subject or book..."
+            autocomplete="off"
+        >
+
+    </div>
+
+    <div class="revision-count" id="revisionCount">
+        Loading revision books...
+    </div>
+
+    <div class="revision-books" id="revisionBooks"></div>
+
+</section>
+
+<script id="lymar-revision-library-js">
+
+const LYMAR_REVISION_BOOKS = [
+
+    ["S1","Biology","S1 Biology SB 2026-2027.pdf"],
+    ["S1","Chemistry","S1 Chemistry SB F 2026-2027...pdf"],
+    ["S1","English","S1 English SB 2026-2027.pdf"],
+    ["S1","Entrepreneurship","S1 ENT SB 2026-2027.pdf"],
+    ["S1","French","S1 Francais Livre de l'eleve 2026-2027 .pdf"],
+    ["S1","Geography","S1 Geography and Environment SB 2026-2027.pdf"],
+    ["S1","History","S1 History SB 2026-2027.pdf"],
+    ["S1","ICT","S1 ICT SB 2026-2027..pdf"],
+    ["S1","Kinyarwanda","S1 Kinyarwanda SB 2026-2027...pdf"],
+    ["S1","Kiswahili","S1 Kiswahili SB 2026-2027.pdf"],
+    ["S1","Mathematics","S1 Math SB F 2026-2027....pdf"],
+    ["S1","Music","S1 Music SB 2026-2027.pdf"],
+    ["S1","Physics","S1 Physics SB F 2026-2027...pdf"],
+    ["S1","Religion & Ethics","S1 Religion  Ethics SB F 2026-2027...pdf"],
+
+    ["S2","Biology","S2 Biology SB 2026-2027..pdf"],
+    ["S2","Chemistry","S2 Chemistry SB F 2026-2027...pdf"],
+    ["S2","English","S2 English SB 2026-2027.pdf"],
+    ["S2","Entrepreneurship","S2 Entrepreneurship SB 2026-2027...pdf"],
+    ["S2","French","S2 Francais, Livre de l'eleve 2026-2027.pdf"],
+    ["S2","Geography","S2 Geography and Environment SB 2026-2027 .pdf"],
+    ["S2","History","S2 History SB 2026-2027.pdf"],
+    ["S2","ICT","S2 ICT SB  2026-2027.pdf"],
+    ["S2","Kinyarwanda","S2 Kinyarwanda SB 2026-2027...pdf"],
+    ["S2","Kiswahili","S2 Kiswahili SB 2026-2027.pdf"],
+    ["S2","Mathematics","S2 Math SB F 2026-2027....pdf"],
+    ["S2","Music","S2 Music SB 2026-2027.pdf"],
+    ["S2","Physics","s2 Physics SB F 2026-2027...pdf"],
+    ["S2","Religion & Ethics","S2 Religion  Ethics SB F 2026-2027...pdf"],
+
+    ["S3","Biology","S3 Biology SB 2026-2027...pdf"],
+    ["S3","Chemistry","S3 Chemistry SB 2026-2027...pdf"],
+    ["S3","English","S3 English SB F 2026-2027....pdf"],
+    ["S3","Entrepreneurship","S3 ENT SB 2026-2027...pdf"],
+    ["S3","Fine Arts","S3 Fine Arts SB 2026-2027.pdf"],
+    ["S3","French","S3 Francais, Livre de l'eleve 2026-2027.pdf"],
+    ["S3","Geography","S3 Geography and Environment SB 2026-2027.pdf"],
+    ["S3","History","S3 History SB 2026-2027.pdf"],
+    ["S3","ICT","S3 ICT SB 2026-2027.pdf"],
+    ["S3","Kinyarwanda","S3 Kinyarwanda SB 2026-2027.pdf"],
+    ["S3","Kiswahili","S3 Kiswahili SB 2026-2027.pdf"],
+    ["S3","Mathematics","S3 Mathematics SB 2026-2027.pdf"],
+    ["S3","Music","S3 Music 2026-2027.pdf"],
+    ["S3","Physics","s3 Physics SB F 2026-2027....pdf"],
+    ["S3","Religion & Ethics","S3 Religion  Ethics SB 2026-2027.pdf"],
+
+    ["S4","Basic Mathematics","S4 Basic Mathematics SB FV 2026-2027..(1).pdf"],
+    ["S4","Core Mathematics","S4 Core Mathematics SB F 2026-2027.....pdf"],
+    ["S4","Economics","S4 Economics SB 2026-2027.pdf"],
+    ["S4","English","S4 English language Pathway SB 2026-2027.pdf"],
+    ["S4","English","S4 English Non Language SB EXEPERIMENTAL VERSION .pdf"],
+    ["S4","Entrepreneurship","S4 Entrepreneurship SB 2026-2027.....pdf"],
+    ["S4","French","S4 Francais Manuel de l_eleve Options non litteraires 2026-2027.pdf"],
+    ["S4","French","S4 Francais, Manuel de l_eleve options litteraires.pdf"],
+    ["S4","Geography","S4 Geography SB 2026.pdf"],
+    ["S4","GRS","S4 GRS SB 2026-2027.pdf"],
+    ["S4","History","S4 History Advanced Level SB 2026-2027.pdf"],
+    ["S4","History","S4 History for Language SB 2026-2027 .pdf"],
+    ["S4","History","S4 History Humanities SB 2026-2027.pdf"],
+    ["S4","ICT","S4 ICT SB 2026-2027 .pdf"],
+    ["S4","Kinyarwanda","S4 Ikinyarwanda SB Amashami atari indimi 2026.pdf"],
+    ["S4","Kiswahili","S4 Kiswahili SB 2026-2027.pdf"],
+    ["S4","Literature","S4 Literature English SB 2026-2027......pdf"],
+    ["S4","Physics","S4 Physics SB 2026-2027.pdf"],
+    ["S4","Psychology","S4 Psychology Art and humanities SB 2026-2027.pdf"],
+    ["S4","Psychology","S4 Psychology Languages SB 2026-2027.pdf"],
+
+    ["S5","Kinyarwanda","S5  Ikinyarwanda SB amashami atari indimi 2026-2027.pdf"],
+    ["S5","Kinyarwanda","S5  Ikinyarwanda SB Ishami ry indimi.pdf"],
+    ["S5","Basic Mathematics","S5 Basic Math SB 2026-2027...pdf"],
+    ["S5","Core Mathematics","S5 Core Mathematics SB 2026-2027.pdf"],
+    ["S5","Economics","S5 Economics SB 2026-2027...pdf"],
+    ["S5","English","S5 English language SB 2026-2027.pdf"],
+    ["S5","English","S5 English Non language experimental.pdf"],
+    ["S5","Entrepreneurship","S5 Entrepreneurship SB 2026-2027.pdf"],
+    ["S5","French","S5 Francais Manuel de leleve Options non litteraires 2026-2027.pdf"],
+    ["S5","French","S5 Francais, Manuel de l_eleve options litteraires.pdf"],
+    ["S5","General & Religious Studies","S5 General and Religious Studies SB v3.pdf"],
+    ["S5","Geography","S5 Geography SB 2026-2027.pdf"],
+    ["S5","History","S5 History Advanced Level SB 2026-2027.pdf"],
+    ["S5","History","S5 History Humanities SB 2026-2027.pdf"],
+    ["S5","History","S5 History Language SB 2026-2027.pdf"],
+    ["S5","History","S5 History Languages Pathway SB 2026-2027 .pdf"],
+    ["S5","ICT","S5 ICT SB 2026-2027.pdf"],
+    ["S5","Kiswahili","S5 KISWAHILI SB 2026-2027.pdf"],
+    ["S5","Literature","S5 Literature English SB 2026-2027.....pdf"],
+    ["S5","Physics","S5 Physics SB 2026-2027.pdf"],
+    ["S5","Psychology","S5 Psychology Art and humanities SB 2026-2027.pdf"],
+    ["S5","Psychology","S5 Psychology Languages SB 2026-2027.pdf"]
+];
+
+function displayRevisionBooks() {
+
+    const container = document.getElementById("revisionBooks");
+    const classFilter = document.getElementById("revisionClass");
+    const searchBox = document.getElementById("revisionSearch");
+    const count = document.getElementById("revisionCount");
+
+    if (!container || !classFilter || !searchBox || !count) {
+        return;
+    }
+
+    const selectedClass = classFilter.value;
+    const search = searchBox.value.toLowerCase().trim();
+
+    const filtered = LYMAR_REVISION_BOOKS.filter(function(book) {
+
+        const className = book[0].toLowerCase();
+        const subject = book[1].toLowerCase();
+        const title = book[2].toLowerCase();
+
+        const classMatches =
+            !selectedClass ||
+            book[0] === selectedClass;
+
+        const searchMatches =
+            !search ||
+            className.includes(search) ||
+            subject.includes(search) ||
+            title.includes(search);
+
+        return classMatches && searchMatches;
+    });
+
+    count.textContent =
+        filtered.length +
+        " revision book" +
+        (filtered.length === 1 ? "" : "s") +
+        " available";
+
+    if (!filtered.length) {
+        container.innerHTML =
+            '<div class="revision-empty">' +
+            'No revision book matches your search.' +
+            '</div>';
+        return;
+    }
+
+    container.innerHTML = filtered.map(function(book) {
+
+        const className = book[0];
+        const subject = book[1];
+        const filename = book[2];
+
+        const url =
+            "/static/revision_books/" +
+            encodeURIComponent(filename);
+
+        return `
+            <div class="revision-book">
+
+                <div class="revision-book-icon">📘</div>
+
+                <div style="font-size:12px; opacity:.65;">
+                    ${className}  ${subject}
+                </div>
+
+                <h3>${filename.replace(/\.pdf$/i, "")}</h3>
+
+                <p>School Book  2026–2027</p>
+
+                <a
+                    class="revision-open"
+                    href="${url}"
+                    target="_blank"
+                    rel="noopener"
+                >
+                    Open Book
+                </a>
+
+            </div>
+        `;
+
+    }).join("");
+}
+
+document.addEventListener("DOMContentLoaded", function() {
+
+    const classFilter = document.getElementById("revisionClass");
+    const searchBox = document.getElementById("revisionSearch");
+
+    if (classFilter) {
+        classFilter.addEventListener("change", displayRevisionBooks);
+    }
+
+    if (searchBox) {
+        searchBox.addEventListener("input", displayRevisionBooks);
+    }
+
+    displayRevisionBooks();
+});
+
+</script>
+
+
+
+<!-- =====================================================
+     LYMAR SYLLABUS LIBRARY
+===================================================== -->
+
+<style>
+    .lymar-syllabus-library {
+        width: 100%;
+        margin: 35px auto;
+        padding: 30px;
+        box-sizing: border-box;
+        border-radius: 22px;
+        background: linear-gradient(145deg, #101827, #172236);
+        border: 1px solid rgba(255,255,255,0.08);
+        box-shadow: 0 15px 40px rgba(0,0,0,0.30);
+    }
+
+    .lymar-syllabus-header {
+        text-align: center;
+        margin-bottom: 25px;
+    }
+
+    .lymar-syllabus-header h2 {
+        margin: 0 0 10px 0;
+        font-size: 30px;
+        color: #ffffff;
+    }
+
+    .lymar-syllabus-header p {
+        margin: 0;
+        color: #aebbd0;
+        font-size: 15px;
+    }
+
+    .lymar-syllabus-controls {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        margin-bottom: 25px;
+    }
+
+    .lymar-syllabus-search,
+    .lymar-syllabus-filter {
+        flex: 1;
+        min-width: 220px;
+        padding: 13px 15px;
+        border-radius: 12px;
+        border: 1px solid rgba(255,255,255,0.12);
+        background: #0b1220;
+        color: white;
+        outline: none;
+        box-sizing: border-box;
+    }
+
+    .lymar-syllabus-search::placeholder {
+        color: #8190a8;
+    }
+
+    .lymar-syllabus-count {
+        margin-bottom: 18px;
+        color: #9fb0c9;
+        font-size: 14px;
+    }
+
+    .lymar-syllabus-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        gap: 18px;
+    }
+
+    .lymar-syllabus-card {
+        display: flex;
+        gap: 15px;
+        padding: 20px;
+        border-radius: 17px;
+        background: rgba(255,255,255,0.045);
+        border: 1px solid rgba(255,255,255,0.08);
+        transition: transform 0.2s ease, border-color 0.2s ease;
+        box-sizing: border-box;
+    }
+
+    .lymar-syllabus-card:hover {
+        transform: translateY(-4px);
+        border-color: rgba(100,180,255,0.5);
+    }
+
+    .lymar-syllabus-icon {
+        font-size: 34px;
+        line-height: 1;
+    }
+
+    .lymar-syllabus-info {
+        flex: 1;
+    }
+
+    .lymar-syllabus-info h3 {
+        margin: 0 0 7px 0;
+        color: white;
+        font-size: 17px;
+    }
+
+    .lymar-syllabus-info p {
+        margin: 0 0 15px 0;
+        color: #94a5bd;
+        font-size: 13px;
+    }
+
+    .lymar-syllabus-button {
+        display: inline-block;
+        padding: 9px 13px;
+        border-radius: 10px;
+        background: #2563eb;
+        color: white !important;
+        text-decoration: none !important;
+        font-size: 13px;
+        font-weight: 600;
+    }
+
+    .lymar-syllabus-button:hover {
+        background: #1d4ed8;
+    }
+
+    .lymar-syllabus-empty {
+        display: none;
+        text-align: center;
+        padding: 35px;
+        color: #9aa9bf;
+    }
+</style>
+
+<section class="lymar-syllabus-library" id="lymarSyllabusLibrary">
+
+    <div class="lymar-syllabus-header">
+        <h2> SYLLABUS LIBRARY</h2>
+        <p>
+            Official school syllabus collection for Senior 4, Senior 5 and Senior 6
+        </p>
+    </div>
+
+    <div class="lymar-syllabus-controls">
+
+        <input
+            type="text"
+            id="lymarSyllabusSearch"
+            class="lymar-syllabus-search"
+            placeholder=" Search syllabus..."
+            oninput="filterLymarSyllabuses()"
+        >
+
+        <select
+            id="lymarSyllabusClass"
+            class="lymar-syllabus-filter"
+            onchange="filterLymarSyllabuses()"
+        >
+            <option value="all">All Classes</option>
+    <option value="s4-s6">S4 – S6</option>
+        </select>
+
+    </div>
+
+    <div class="lymar-syllabus-count" id="lymarSyllabusCount">
+        17 syllabuses available
+    </div>
+
+    <div class="lymar-syllabus-grid" id="lymarSyllabusGrid">
+        
+        <div class="lymar-syllabus-card"
+             data-subject="economics syllabus"
+             data-title="s4-s6 economics syllabus 2026.pdf">
+
+            <div class="lymar-syllabus-icon">📑</div>
+
+            <div class="lymar-syllabus-info">
+                <h3>Economics Syllabus</h3>
+                <p>Senior 4  Senior 5  Senior 6</p>
+
+                <button
+                    class="lymar-syllabus-button"
+                    type="button"
+                    onclick=\"openLymarSyllabus('/view_syllabus/S4-S6%20Economics%20Syllabus%202026.pdf')\">
+                     Open Syllabus
+                </button>
+            </div>
+
+        </div>
+
+
+        <div class="lymar-syllabus-card"
+             data-subject="english language"
+             data-title="s4-s6 english language syllabus 2026.pdf">
+
+            <div class="lymar-syllabus-icon">📑</div>
+
+            <div class="lymar-syllabus-info">
+                <h3>English Language</h3>
+                <p>Senior 4  Senior 5  Senior 6</p>
+
+                <button
+                    class="lymar-syllabus-button"
+                    type="button"
+                    onclick=\"openLymarSyllabus('/view_syllabus/S4-S6%20English%20language%20syllabus%202026.pdf')\">
+                     Open Syllabus
+                </button>
+            </div>
+
+        </div>
+
+
+        <div class="lymar-syllabus-card"
+             data-subject="english non-language"
+             data-title="s4-s6 english non language syllabus 2026.pdf">
+
+            <div class="lymar-syllabus-icon">📑</div>
+
+            <div class="lymar-syllabus-info">
+                <h3>English Non-Language</h3>
+                <p>Senior 4  Senior 5  Senior 6</p>
+
+                <button
+                    class="lymar-syllabus-button"
+                    type="button"
+                    onclick=\"openLymarSyllabus('/view_syllabus/S4-S6%20English%20non%20language%20Syllabus%202026.pdf')\">
+                     Open Syllabus
+                </button>
+            </div>
+
+        </div>
+
+
+        <div class="lymar-syllabus-card"
+             data-subject="entrepreneurship"
+             data-title="s4-s6 entrepreneuship syllabus 2026.pdf">
+
+            <div class="lymar-syllabus-icon">📑</div>
+
+            <div class="lymar-syllabus-info">
+                <h3>Entrepreneurship</h3>
+                <p>Senior 4  Senior 5  Senior 6</p>
+
+                <button
+                    class="lymar-syllabus-button"
+                    type="button"
+                    onclick=\"openLymarSyllabus('/view_syllabus/S4-S6%20Entrepreneuship%20Syllabus%202026.pdf')\">
+                     Open Syllabus
+                </button>
+            </div>
+
+        </div>
+
+
+        <div class="lymar-syllabus-card"
+             data-subject="geography syllabus 2026-2027"
+             data-title="s4-s6 geography syllabus 2026-2027 .pdf">
+
+            <div class="lymar-syllabus-icon">📑</div>
+
+            <div class="lymar-syllabus-info">
+                <h3>Geography Syllabus 2026-2027</h3>
+                <p>Senior 4  Senior 5  Senior 6</p>
+
+                <button
+                    class="lymar-syllabus-button"
+                    type="button"
+                    onclick=\"openLymarSyllabus('/view_syllabus/S4-S6%20Geography%20Syllabus%202026-2027%20.pdf')\">
+                     Open Syllabus
+                </button>
+            </div>
+
+        </div>
+
+
+        <div class="lymar-syllabus-card"
+             data-subject="general and religious studies"
+             data-title="s4-s6 grs syllabus 2026.pdf">
+
+            <div class="lymar-syllabus-icon">📑</div>
+
+            <div class="lymar-syllabus-info">
+                <h3>General and Religious Studies</h3>
+                <p>Senior 4  Senior 5  Senior 6</p>
+
+                <button
+                    class="lymar-syllabus-button"
+                    type="button"
+                    onclick=\"openLymarSyllabus('/view_syllabus/S4-S6%20GRS%20Syllabus%202026.pdf')\">
+                     Open Syllabus
+                </button>
+            </div>
+
+        </div>
+
+
+        <div class="lymar-syllabus-card"
+             data-subject="ict syllabus"
+             data-title="s4-s6 ict syllabus 2026.pdf">
+
+            <div class="lymar-syllabus-icon">📑</div>
+
+            <div class="lymar-syllabus-info">
+                <h3>ICT Syllabus</h3>
+                <p>Senior 4  Senior 5  Senior 6</p>
+
+                <button
+                    class="lymar-syllabus-button"
+                    type="button"
+                    onclick=\"openLymarSyllabus('/view_syllabus/S4-S6%20ICT%20Syllabus%202026.pdf')\">
+                     Open Syllabus
+                </button>
+            </div>
+
+        </div>
+
+
+        <div class="lymar-syllabus-card"
+             data-subject="kinyarwanda non-language"
+             data-title="s4-s6 kinyarwanda non language syllabus 2026 .pdf">
+
+            <div class="lymar-syllabus-icon">📑</div>
+
+            <div class="lymar-syllabus-info">
+                <h3>Kinyarwanda Non-Language</h3>
+                <p>Senior 4  Senior 5  Senior 6</p>
+
+                <button
+                    class="lymar-syllabus-button"
+                    type="button"
+                    onclick=\"openLymarSyllabus('/view_syllabus/S4-S6%20Kinyarwanda%20non%20language%20Syllabus%202026%20.pdf')\">
+                     Open Syllabus
+                </button>
+            </div>
+
+        </div>
+
+
+        <div class="lymar-syllabus-card"
+             data-subject="kinyarwanda syllabus"
+             data-title="s4-s6 kinyarwanda syllabus 2026.pdf">
+
+            <div class="lymar-syllabus-icon">📑</div>
+
+            <div class="lymar-syllabus-info">
+                <h3>Kinyarwanda Syllabus</h3>
+                <p>Senior 4  Senior 5  Senior 6</p>
+
+                <button
+                    class="lymar-syllabus-button"
+                    type="button"
+                    onclick=\"openLymarSyllabus('/view_syllabus/S4-S6%20Kinyarwanda%20Syllabus%202026.pdf')\">
+                     Open Syllabus
+                </button>
+            </div>
+
+        </div>
+
+
+        <div class="lymar-syllabus-card"
+             data-subject="literature in english syllabus"
+             data-title="s4-s6 literature in english syllabus 2026.pdf">
+
+            <div class="lymar-syllabus-icon">📑</div>
+
+            <div class="lymar-syllabus-info">
+                <h3>Literature in English Syllabus</h3>
+                <p>Senior 4  Senior 5  Senior 6</p>
+
+                <button
+                    class="lymar-syllabus-button"
+                    type="button"
+                    onclick=\"openLymarSyllabus('/view_syllabus/S4-S6%20Literature%20in%20English%20Syllabus%202026.pdf')\">
+                     Open Syllabus
+                </button>
+            </div>
+
+        </div>
+
+
+        <div class="lymar-syllabus-card"
+             data-subject="mathematics — basic"
+             data-title="s4-s6 math basic syllabus 2026.pdf">
+
+            <div class="lymar-syllabus-icon">📑</div>
+
+            <div class="lymar-syllabus-info">
+                 <h3>Mathematics — Basic</h3>
+                <p>Senior 4  Senior 5  Senior 6</p>
+
+                <button
+                    class="lymar-syllabus-button"
+                    type="button"
+                    onclick=\"openLymarSyllabus('/view_syllabus/S4-S6%20Math%20Basic%20Syllabus%202026.pdf')\">
+                     Open Syllabus
+                </button>
+            </div>
+
+        </div>
+
+
+        <div class="lymar-syllabus-card"
+             data-subject="mathematics — core"
+             data-title="s4-s6 math core syllabus 2026.pdf">
+
+            <div class="lymar-syllabus-icon">📑</div>
+
+            <div class="lymar-syllabus-info">
+                 <h3>Mathematics — Core</h3>
+                <p>Senior 4  Senior 5  Senior 6</p>
+
+                <button
+                    class="lymar-syllabus-button"
+                    type="button"
+                    onclick=\"openLymarSyllabus('/view_syllabus/S4-S6%20Math%20core%20Syllabus%202026.pdf')\">
+                     Open Syllabus
+                </button>
+            </div>
+
+        </div>
+
+
+        <div class="lymar-syllabus-card"
+             data-subject="physical education and sports"
+             data-title="s4-s6 pes syllabus 2026.pdf">
+
+            <div class="lymar-syllabus-icon">📑</div>
+
+            <div class="lymar-syllabus-info">
+                <h3>Physical Education and Sports</h3>
+                <p>Senior 4  Senior 5  Senior 6</p>
+
+                <button
+                    class="lymar-syllabus-button"
+                    type="button"
+                    onclick=\"openLymarSyllabus('/view_syllabus/S4-S6%20PES%20Syllabus%202026.pdf')\">
+                     Open Syllabus
+                </button>
+            </div>
+
+        </div>
+
+
+        <div class="lymar-syllabus-card"
+             data-subject="physics syllabus"
+             data-title="s4-s6 physics syllabus 2026.pdf">
+
+            <div class="lymar-syllabus-icon">📑</div>
+
+            <div class="lymar-syllabus-info">
+                <h3>Physics Syllabus</h3>
+                <p>Senior 4  Senior 5  Senior 6</p>
+
+                <button
+                    class="lymar-syllabus-button"
+                    type="button"
+                    onclick=\"openLymarSyllabus('/view_syllabus/S4-S6%20Physics%20Syllabus%202026.pdf')\">
+                     Open Syllabus
+                </button>
+            </div>
+
+        </div>
+
+
+        <div class="lymar-syllabus-card"
+             data-subject="psychology — art and humanities pathway"
+             data-title="s4-s6 psychology syllabus for art and humanities pathway 2026 .pdf">
+
+            <div class="lymar-syllabus-icon">📑</div>
+
+            <div class="lymar-syllabus-info">
+                 <h3>Psychology — Art and Humanities Pathway</h3>
+                <p>Senior 4  Senior 5  Senior 6</p>
+
+                <button
+                    class="lymar-syllabus-button"
+                    type="button"
+                    onclick=\"openLymarSyllabus('/view_syllabus/S4-S6%20Psychology%20Syllabus%20for%20Art%20and%20Humanities%20Pathway%202026%20.pdf')\">
+                     Open Syllabus
+                </button>
+            </div>
+
+        </div>
+
+
+        <div class="lymar-syllabus-card"
+             data-subject="psychology — languages pathway"
+             data-title="s4-s6 psychology syllabus for languages pathway 2026 .pdf">
+
+            <div class="lymar-syllabus-icon">📑</div>
+
+            <div class="lymar-syllabus-info">
+                 <h3>Psychology — Languages Pathway</h3>
+                <p>Senior 4  Senior 5  Senior 6</p>
+
+                <button
+                    class="lymar-syllabus-button"
+                    type="button"
+                    onclick=\"openLymarSyllabus('/view_syllabus/S4-S6%20Psychology%20Syllabus%20for%20Languages%20Pathway%202026%20.pdf')\">
+                     Open Syllabus
+                </button>
+            </div>
+
+        </div>
+
+
+        <div class="lymar-syllabus-card"
+             data-subject="kiswahili"
+             data-title="s4-s6 swahili syllabus 2026 .pdf">
+
+            <div class="lymar-syllabus-icon">📑</div>
+
+            <div class="lymar-syllabus-info">
+                <h3>Kiswahili</h3>
+                <p>Senior 4  Senior 5  Senior 6</p>
+
+                <button
+                    class="lymar-syllabus-button"
+                    type="button"
+                    onclick=\"openLymarSyllabus('/view_syllabus/S4-S6%20Swahili%20Syllabus%202026%20.pdf')\">
+                     Open Syllabus
+                </button>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="lymar-syllabus-empty" id="lymarSyllabusEmpty">
+        No syllabus found.
+    </div>
+
+</section>
+
+<script>
+function filterLymarSyllabuses() {
+
+    const searchBox =
+        document.getElementById("lymarSyllabusSearch");
+
+    const search =
+        searchBox.value.toLowerCase().trim();
+
+    const cards =
+        document.querySelectorAll(".lymar-syllabus-card");
+
+    const count =
+        document.getElementById("lymarSyllabusCount");
+
+    const empty =
+        document.getElementById("lymarSyllabusEmpty");
+
+    let visible = 0;
+
+    cards.forEach(card => {
+
+        const subject =
+            card.dataset.subject || "";
+
+        const title =
+            card.dataset.title || "";
+
+        const matches =
+            subject.includes(search) ||
+            title.includes(search);
+
+        if (matches) {
+            card.style.display = "flex";
+            visible++;
+        } else {
+            card.style.display = "none";
+        }
+
+    });
+
+    count.textContent =
+        visible + (visible === 1
+            ? " syllabus available"
+            : " syllabuses available");
+
+    empty.style.display =
+        visible === 0 ? "block" : "none";
+}
+</script>
+
+<!-- END LYMAR SYLLABUS LIBRARY -->
+
+
+
+<!-- LYMAR SYLLABUS PDF VIEWER -->
+
+<style>
+    #lymarSyllabusViewer {
+        display: none;
+        position: fixed;
+        inset: 0;
+        z-index: 99999;
+        background: rgba(0, 0, 0, 0.88);
+        padding: 20px;
+        box-sizing: border-box;
+    }
+
+    .lymar-viewer-window {
+        width: 100%;
+        height: 100%;
+        max-width: 1400px;
+        margin: auto;
+        background: #111827;
+        border-radius: 16px;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        box-shadow: 0 20px 70px rgba(0,0,0,0.6);
+    }
+
+    .lymar-viewer-topbar {
+        min-height: 58px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 15px;
+        padding: 10px 16px;
+        background: #0b1220;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+        box-sizing: border-box;
+    }
+
+    .lymar-viewer-title {
+        color: white;
+        font-weight: 700;
+        font-size: 16px;
+    }
+
+    .lymar-viewer-close {
+        border: none;
+        background: #dc2626;
+        color: white;
+        padding: 9px 15px;
+        border-radius: 9px;
+        cursor: pointer;
+        font-weight: 700;
+        font-size: 14px;
+    }
+
+    .lymar-viewer-close:hover {
+        background: #b91c1c;
+    }
+
+    #lymarSyllabusFrame {
+        flex: 1;
+        width: 100%;
+        border: none;
+        background: white;
+    }
+
+    .lymar-syllabus-button {
+        border: none;
+        cursor: pointer;
+        font-family: inherit;
+    }
+
+    body.lymar-viewer-open {
+        overflow: hidden;
+    }
+</style>
+
+<div id="lymarSyllabusViewer">
+
+    <div class="lymar-viewer-window">
+
+        <div class="lymar-viewer-topbar">
+
+            <div class="lymar-viewer-title">
+                 LYMAR Syllabus Viewer
+            </div>
+
+            <button
+                class="lymar-viewer-close"
+                type="button"
+                onclick="closeLymarSyllabus()">
+                 Close
+            </button>
+
+        </div>
+
+        <iframe
+            id="lymarSyllabusFrame"
+            title="LYMAR Syllabus Viewer">
+        </iframe>
+
+    </div>
+
+</div>
+
+<script>
+function openLymarSyllabus(pdfUrl) {
+
+    const viewer =
+        document.getElementById("lymarSyllabusViewer");
+
+    const frame =
+        document.getElementById("lymarSyllabusFrame");
+
+    if (!viewer || !frame) {
+        return;
+    }
+
+    frame.src = pdfUrl;
+
+    viewer.style.display = "block";
+
+    document.body.classList.add("lymar-viewer-open");
+}
+
+
+function closeLymarSyllabus() {
+
+    const viewer =
+        document.getElementById("lymarSyllabusViewer");
+
+    const frame =
+        document.getElementById("lymarSyllabusFrame");
+
+    if (!viewer || !frame) {
+        return;
+    }
+
+    viewer.style.display = "none";
+
+    frame.src = "";
+
+    document.body.classList.remove("lymar-viewer-open");
+}
+
+
+document.addEventListener("keydown", function(event) {
+
+    if (event.key === "Escape") {
+        closeLymarSyllabus();
+    }
+
+});
+</script>
+
+<!-- END LYMAR SYLLABUS PDF VIEWER -->
+
+</body>
+</html>
+
