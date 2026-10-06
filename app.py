@@ -71,6 +71,169 @@ def ask():
     # Answer date/time questions directly instead of asking Gemini
     question_lower = question.lower()
 
+    # LYMAR official school knowledge
+    school_knowledge = {
+        "creator": (
+            "LYMAR AI was created by IKUZE AUDOPHEN "
+            "at LYCEE SAINT MARCEL DE RUKARA."
+        ),
+        "motto": (
+            "The motto of LYCEE SAINT MARCEL DE RUKARA is "
+            "Education, Labour, Light."
+        ),
+        "school": (
+            "LYCEE SAINT MARCEL DE RUKARA is a Catholic secondary school "
+            "located in Rukara, Kayonza District, Eastern Province, Rwanda."
+        ),
+        "purpose": (
+            "LYMAR AI is a school assistant designed to help students "
+            "learn, revise subjects, ask questions, practice, and study more effectively."
+        ),
+        "subjects": (
+            "LYMAR supports subjects including Mathematics, Physics, Chemistry, "
+            "Biology, ICT and Programming, English, French, History and Geography, "
+            "Entrepreneurship, Psychology, Literature, Kiswahili, Music Dance and Drama, "
+            "and Physical Sports and Education."
+        ),
+        "rules": (
+            "LYMAR's school rules include wearing the proper uniform, being on time, "
+            "no fighting, no stealing, attending Holy Mass each morning, and general "
+            "sports activities on Saturday."
+        ),
+    }
+
+    # Additional official school history and facts
+    school_history = (
+        "LYCEE SAINT MARCEL DE RUKARA began as École Secondaire de Rukara "
+        "(ESR), established through the initiative of parents and priests "
+        "of the Catholic Diocese of Kibungo. The school began on "
+        "26 September 2000 with 75 students: 50 students in Senior 1 "
+        "and 25 students in Senior 2. It received government recognition "
+        "during the 2000/2001 school year. The school is located in "
+        "Rukara Sector, Kayonza District, Eastern Province, Rwanda, "
+        "about 7 kilometres from the Kayonza-Nyagatare main road. "
+        "The school has Mathematics and Science, Languages, and Arts "
+        "and Humanities streams. LKK, meaning English-Kiswahili-Kinyarwanda, "
+        "was approved in 2010, while MCE, meaning Mathematics-Computer-Economics, "
+        "was approved in 2014. The school has received support from the "
+        "Sisters of the Sacred Heart of Jesus and Mary and Manos Unidas. "
+        "The school celebrated its 25th anniversary in 2025."
+    )
+
+    # Direct verified school-history answers.
+    normalized_question = " ".join(question_lower.split())
+
+    founding_question = (
+        ("when" in normalized_question or
+         "what year" in normalized_question or
+         "which year" in normalized_question)
+        and
+        ("founded" in normalized_question or
+         "established" in normalized_question or
+         "started" in normalized_question or
+         "began" in normalized_question)
+    )
+
+    school_history_question = (
+        "history" in normalized_question
+        and
+        ("school" in normalized_question or
+         "lycee" in normalized_question or
+         "saint marcel" in normalized_question or
+         "rukara" in normalized_question)
+    )
+
+    if founding_question or school_history_question:
+        return jsonify({"answer": school_history})
+
+
+    if any(term in question_lower for term in [
+        "when was lkk approved",
+        "what is lkk",
+        "lkk combination",
+    ]):
+        return jsonify({
+            "answer": (
+                "LKK, meaning English-Kiswahili-Kinyarwanda, "
+                "was approved at LYCEE SAINT MARCEL DE RUKARA in 2010."
+            )
+        })
+
+    if any(term in question_lower for term in [
+        "when was mce approved",
+        "what is mce",
+        "mce combination",
+    ]):
+        return jsonify({
+            "answer": (
+                "MCE, meaning Mathematics-Computer-Economics, "
+                "was approved at LYCEE SAINT MARCEL DE RUKARA in 2014."
+            )
+        })
+
+    if any(term in question_lower for term in [
+        "how many students started",
+        "how many students did the school start with",
+        "first students",
+        "original students",
+    ]):
+        return jsonify({
+            "answer": (
+                "LYCEE SAINT MARCEL DE RUKARA began with 75 students: "
+                "50 students in Senior 1 and 25 students in Senior 2."
+            )
+        })
+
+    # Answer official LYMAR and school questions directly.
+    if any(term in question_lower for term in [
+        "who created lymar",
+        "who made lymar",
+        "who developed lymar",
+        "who is the creator of lymar",
+        "who built lymar",
+    ]):
+        return jsonify({"answer": school_knowledge["creator"]})
+
+    if any(term in question_lower for term in [
+        "school motto",
+        "motto of the school",
+        "what is the motto",
+    ]):
+        return jsonify({"answer": school_knowledge["motto"]})
+
+    if any(term in question_lower for term in [
+        "what is lymar",
+        "what is lymar ai",
+        "purpose of lymar",
+        "what does lymar do",
+        "what can lymar do",
+    ]):
+        return jsonify({"answer": school_knowledge["purpose"]})
+
+    if any(term in question_lower for term in [
+        "where is the school",
+        "where is lycee saint marcel",
+        "where is saint marcel de rukara",
+        "tell me about the school",
+    ]):
+        return jsonify({"answer": school_knowledge["school"]})
+
+    if any(term in question_lower for term in [
+        "what subjects",
+        "which subjects",
+        "subjects does lymar support",
+        "subjects supported by lymar",
+    ]):
+        return jsonify({"answer": school_knowledge["subjects"]})
+
+    if any(term in question_lower for term in [
+        "school rules",
+        "what are the school rules",
+        "rules of the school",
+    ]):
+        return jsonify({"answer": school_knowledge["rules"]})
+
+
     if any(term in question_lower for term in [
         "today's date",
         "todays date",
@@ -111,7 +274,22 @@ You are LYMAR, a friendly and intelligent AI school assistant.
 You were created by IKUZE AUDOPHEN for:
 LYCEE SAINT MARCEL DE RUKARA.
 
-Your job is to help students learn clearly.
+Your job is to help students learn clearly and accurately.
+
+IMPORTANT ACCURACY RULES:
+
+1. Never invent facts, names, dates, statistics, events, sources, or school information.
+2. Do not guess when you are unsure.
+3. If you are not certain about an answer, clearly say that you are not certain instead of making up an answer.
+4. Never claim that information is current or live unless it is explicitly provided to you by the system.
+5. For dates and times, trust the current date and time information provided by the system.
+6. For mathematics and science, calculate carefully and show the important steps.
+7. If a question has insufficient information, explain what information is missing.
+8. Separate facts from explanations, examples, opinions, and estimates.
+9. Do not create fake sources or pretend that you checked a website when you did not.
+10. When the student asks about LYCEE SAINT MARCEL DE RUKARA, use only information provided by the system or information you are confident about.
+11. If the student asks for information that may have changed recently, do not present old knowledge as current.
+12. Always answer the student's actual question directly.
 
 IMPORTANT ANSWER STYLE:
 
