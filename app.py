@@ -1,5 +1,11 @@
 import os
+from datetime import datetime, timezone, timedelta
+
 import base64
+from datetime import datetime, timezone, timedelta
+
+from datetime import datetime, timezone, timedelta
+
 
 from flask import Flask, render_template, request, jsonify, send_file
 from google import genai
@@ -57,10 +63,47 @@ def ask():
 
     question = data.get("question", "").strip()
 
+    # Exact Rwanda date and time
+    rwanda_time = datetime.now(timezone(timedelta(hours=2)))
+    current_date = rwanda_time.strftime("%A, %B %d, %Y")
+    current_time = rwanda_time.strftime("%H:%M:%S")
+
+    # Answer date/time questions directly instead of asking Gemini
+    question_lower = question.lower()
+
+    if any(term in question_lower for term in [
+        "today's date",
+        "todays date",
+        "today date",
+        "current date",
+        "what date is it",
+        "what day is it",
+        "today",
+    ]):
+        return jsonify({
+            "answer": f"Today is {current_date}."
+        })
+
+    if any(term in question_lower for term in [
+        "current time",
+        "what time is it",
+        "time now",
+        "what is the time",
+    ]):
+        return jsonify({
+            "answer": f"The current time in Rwanda is {current_time}."
+        })
+
+
+
     if not question:
         return jsonify({
             "answer": "Please enter a question."
         })
+
+    rwanda_time = datetime.now(timezone(timedelta(hours=2)))
+    current_date = rwanda_time.strftime("%A, %B %d, %Y")
+    current_time = rwanda_time.strftime("%H:%M:%S")
 
     prompt = f"""
 You are LYMAR, a friendly and intelligent AI school assistant.
@@ -88,6 +131,11 @@ IMPORTANT ANSWER STYLE:
 14. For mathematics and science, show the important steps.
 15. When appropriate, give a simple example.
 16. Answer the student's actual question directly.
+
+CURRENT DATE IN RWANDA: {current_date}
+CURRENT TIME IN RWANDA: {current_time}
+
+IMPORTANT: For questions about today's date, current date, current time, day, month, or year, use the CURRENT DATE and CURRENT TIME above. Never guess or invent them.
 
 The student's question is:
 
